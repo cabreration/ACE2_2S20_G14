@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+
 import 'Slider/Slider.dart' as mySlider;
 /*import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -57,6 +59,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'Slider/Slider.dart';
+
 List<int> bars = [];
 const barWidth = 5.0;
 double screenWidth;
@@ -75,8 +79,8 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("Automail"),
         ),
-        body: Center(
-          child: Body(),
+        body: Column(
+          children: [Body()],
         ),
       ),
     );
@@ -86,17 +90,54 @@ class MyApp extends StatelessWidget {
 class Body extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return Body2();
-    throw UnimplementedError();
+    return PageBody();
+    //throw UnimplementedError();
   }
 }
 
-class Body2 extends State<Body>{
+class PageBody extends State<Body> {
   @override
   Widget build(BuildContext context) {
     mySlider.WaveSlider().generateBar(MediaQuery.of(context).size.width);
-    return Container(child: mySlider.WaveSlider());
+    //return Container(child: mySlider.WaveSlider());
+    //return Cards();
+    return Container(
+        child: Column(
+      children: [
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(
+          "50%",
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
+        mySlider.WaveSlider(),
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(""),
+        Text(
+          "50",
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
+        Text(""),
+        Ink(
+          decoration: const ShapeDecoration(
+            color: Colors.lightBlue,
+            shape: CircleBorder(),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.shopping_basket),
+            color: Colors.lightBlue,
+            onPressed: () {},
+          ),
+        ),
+      ],
+    ));
+
     //throw UnimplementedError();
   }
-
 }

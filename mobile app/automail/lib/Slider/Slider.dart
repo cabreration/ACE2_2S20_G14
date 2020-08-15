@@ -6,6 +6,10 @@ List<int> bars = [];
 const barWidth = 5.0;
 int numberOfBars;
 
+/*
+* Agrega las barras que tendra el slider.
+* Cada barra se agrega con el tamano deseado.
+* */
 void randomNumberGenerator() {
   for (var i = 0; i < numberOfBars; i++) {
     bars.add(10 + i);
@@ -16,13 +20,12 @@ class WaveSlider extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => WaveSliderState();
 
-  // ignore: non_constant_identifier_names
+  /*
+  * Metodo que genera el numero de barras que tendra el slider.
+  * */
   void generateBar(double screenWidth) {
-    //if (bars.isEmpty) {
-    //screenWidth = MediaQuery.of(context).size.width;
     numberOfBars = screenWidth ~/ barWidth;
     randomNumberGenerator();
-    //}
   }
 }
 
@@ -40,8 +43,8 @@ class WaveSliderState extends State<WaveSlider> {
   @override
   Widget build(BuildContext context) {
     int barItem = 0;
-    return Scaffold(
-      body: Center(
+    return Container(
+      child: Center(
         child: Stack(
           alignment: Alignment.centerLeft,
           children: <Widget>[
