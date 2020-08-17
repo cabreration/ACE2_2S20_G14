@@ -16,7 +16,7 @@ module.exports = (app) => {
                 message: 'Hay un objeto nuevo en el buzon'
             })
         
-            await webpush.sendNotification(Common.PUSH, payload)
+            //await webpush.sendNotification(Common.PUSH, payload)
         }
 
         if (Common.SANITIZER < 10) {
@@ -25,7 +25,7 @@ module.exports = (app) => {
                 message: 'Necesitas rellenar el liquido de Sanitizacion'
             })
         
-            await webpush.sendNotification(Common.PUSH, payload)
+            //await webpush.sendNotification(Common.PUSH, payload)
         }
 
         res.send(`Los datos en memoria son: peso = ${Common.WEIGHT}, liquido = ${Common.SANITIZER}, objeto = ${Common.EXISTS}`)
