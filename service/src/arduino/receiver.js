@@ -1,8 +1,12 @@
 let Common = require('./static_values')
 
 const webpush = require('../mobile/notifier')
+const options = {
+    priority: "normal",
+    timeToLive: 60 * 60 * 24
+}
 
-module.exports = (app) => {
+module.exports = (app, admin) => {
 
     app.get('/arduino', async(req, res) => {
         Common.WEIGHT = req.query.peso
@@ -11,11 +15,20 @@ module.exports = (app) => {
         Common.EXISTS = req.query.objeto == 1 ? true : false
     
         if (!flag && Common.EXISTS) {
-            const payload = JSON.stringify({
-                title: 'Entrega',
-                message: 'Hay un objeto nuevo en el buzon'
-            })
+            const payload = {
+                notification: {
+                    title: 'Entrega',
+                    body: 'Hay un objeto nuevo en el buzon'
+                }
+            }
         
+            try {
+                await admin.messaging().sendToDevice(Common.PUSH, payload, options)
+            }
+            catch (e) {
+                console.error(e);
+            }
+            
             //await webpush.sendNotification(Common.PUSH, payload)
         }
 
