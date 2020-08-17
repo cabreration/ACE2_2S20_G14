@@ -1,6 +1,10 @@
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 import 'Slider/Slider.dart' as mySlider;
+import 'network.dart';
 /*import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -99,45 +103,110 @@ class PageBody extends State<Body> {
   @override
   Widget build(BuildContext context) {
     mySlider.WaveSlider().generateBar(MediaQuery.of(context).size.width);
-    //return Container(child: mySlider.WaveSlider());
-    //return Cards();
-    return Container(
-        child: Column(
-      children: [
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(
-          "50%",
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-        mySlider.WaveSlider(),
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(""),
-        Text(
-          "50",
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-        Text(""),
-        Ink(
-          decoration: const ShapeDecoration(
-            color: Colors.lightBlue,
-            shape: CircleBorder(),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.shopping_basket),
-            color: Colors.lightBlue,
-            onPressed: () {},
-          ),
-        ),
-      ],
-    ));
-
+    peticiones().then((value) => print(value.toString()));
     //throw UnimplementedError();
+    return Container(
+      child: FutureBuilder<Widget>(
+        future: peticiones(), // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            children = <Widget>[
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: snapshot.data,
+              )
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = <Widget>[
+              SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting result...'),
+              )
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
+          );
+        },
+      ),
+    );
   }
+
+  Future<Widget> peticiones() async {
+    var response = await http
+        .get('http://18.188.92.62:3000/mail');
+  var dat = response.body;
+    return Text('Tesultado $response.body.');
+    return Container(
+      child: Column(
+        children: [
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(
+            "50%",
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+          mySlider.WaveSlider(),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(
+            "50",
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+          Text(""),
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.lightBlue,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_basket),
+              color: Colors.lightBlue,
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+/*
+  Future<Widget> peticiones() async{
+    var response = await http
+        .get(Uri.encodeFull("http://18.188.92.62:3000/mail"));
+
+    return Text('Tesultado $response.body');
+  }*/
 }
