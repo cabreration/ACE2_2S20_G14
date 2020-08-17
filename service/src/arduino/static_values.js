@@ -1,6 +1,7 @@
 Common = {
+    PREVIOUS: 0,
     WEIGHT: 0,
-    EXISTS: false,
+    SA_SENT: false,
     SANITIZER: 0,
     PUSH: null
 }

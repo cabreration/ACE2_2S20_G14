@@ -9,12 +9,12 @@ const options = {
 module.exports = (app, admin) => {
 
     app.get('/arduino', async(req, res) => {
+        Common.PREVIOUS = Common.WEIGHT
         Common.WEIGHT = req.query.peso
         Common.SANITIZER = req.query.spray
-        let flag = Common.EXISTS 
-        Common.EXISTS = req.query.objeto == 1 ? true : false
     
-        if (!flag && Common.EXISTS) {
+        // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
+        if (Common.WEIGHT > 0 && (Math.abs(Common.WEIGHT - Common.PREVIOUS) > 1)) {
             const payload = {
                 notification: {
                     title: 'Entrega',
@@ -32,7 +32,8 @@ module.exports = (app, admin) => {
             //await webpush.sendNotification(Common.PUSH, payload)
         }
 
-        if (Common.SANITIZER < 10) {
+        // Si el sanitizador esta en menos que 10% y no se ha enviado la notificacion
+        if (Common.SANITIZER < 10 && !Common.SA_SENT) {
             const payload = JSON.stringify({
                 title: 'Liquido Bajo',
                 message: 'Necesitas rellenar el liquido de Sanitizacion'
