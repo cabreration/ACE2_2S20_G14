@@ -92,12 +92,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+var noti1 = new Text("1234");
 
 class Body extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
-    final notifications = new NotificationProvider();
-    notifications.initNotificacions();
     return PageBody();
     //throw UnimplementedError();
   }
@@ -105,10 +105,178 @@ class Body extends StatefulWidget {
 
 class PageBody extends State<Body> {
   double width;
+  final String pesoObjeto = "";
+  final String porcentajeDesinfectante = "";
+  String msj = "1232";
+
+  Widget _buildSuggestions() {
+    return Text(msj);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final notifications = new NotificationProvider();
+    notifications.initNotificacions();
+    notifications.mensajes.listen((argumento) {
+      print("contenido del mensaje");
+      print(argumento);
+      noti1 = new Text(argumento);
+      msj = argumento;
+      setState(() {
+
+      });
+
+    });
     width = MediaQuery.of(context).size.width;
     mySlider.WaveSlider().generateBar(width - 25);
+    return Container(
+      child: Column(
+        children: [
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  print('Card tapped.');
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 122,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        "50",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      mySlider.WaveSlider(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  print('Card tapped.');
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 120,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        "50",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      Text(""),
+                      Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.lightGreen,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.shopping_basket),
+                          color: Colors.white70,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  msj = "";
+                  setState(() {
+                  });
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 105,
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Un paquete se encuentra en el buzon.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.blue,
+                                  Colors.green,
+                                ],
+                              )),
+                      ),
+                      Text(
+                        'El nivel de desinfectante es menor del 10%.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.redAccent,
+                                  Colors.yellow,
+                                ],
+                              )),
+                      ),
+                      Text(
+                        'El desinfectante se agoto.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.red,
+                                  Colors.deepOrange,
+                                ],
+                              )),
+                      ),
+                      _buildSuggestions(),
+                      Text(msj),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+        ],
+      ),
+    );
     peticiones().then((value) => print(value.toString()));
     //throw UnimplementedError();
     return Container(
@@ -146,7 +314,6 @@ class PageBody extends State<Body> {
                 child: CircularProgressIndicator(),
                 width: 60,
                 height: 60,
-
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 16),
@@ -256,6 +423,7 @@ class PageBody extends State<Body> {
                 child: Container(
                   width: width - 26,
                   height: 105,
+                  padding: EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       Text(
@@ -270,8 +438,7 @@ class PageBody extends State<Body> {
                                   Colors.blue,
                                   Colors.green,
                                 ],
-                              )
-                        ),
+                              )),
                       ),
                       Text(
                         'El nivel de desinfectante es menor del 10%.',
@@ -285,8 +452,7 @@ class PageBody extends State<Body> {
                                   Colors.redAccent,
                                   Colors.yellow,
                                 ],
-                              )
-                        ),
+                              )),
                       ),
                       Text(
                         'El desinfectante se agoto.',
@@ -300,9 +466,9 @@ class PageBody extends State<Body> {
                                   Colors.red,
                                   Colors.deepOrange,
                                 ],
-                              )
-                        ),
+                              )),
                       ),
+                      _buildSuggestions(),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.start,
                   ),
