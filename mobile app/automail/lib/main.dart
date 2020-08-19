@@ -1,10 +1,11 @@
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart' as http;
-
 import 'Slider/Slider.dart' as mySlider;
 import 'network.dart';
+import 'notifications.dart';
+import 'dart:ui' as ui;
+
 /*import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text("Automail"),
+          backgroundColor: Colors.orange,
         ),
         body: Column(
           children: [Body()],
@@ -94,15 +96,19 @@ class MyApp extends StatelessWidget {
 class Body extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+    final notifications = new NotificationProvider();
+    notifications.initNotificacions();
     return PageBody();
     //throw UnimplementedError();
   }
 }
 
 class PageBody extends State<Body> {
+  double width;
   @override
   Widget build(BuildContext context) {
-    mySlider.WaveSlider().generateBar(MediaQuery.of(context).size.width);
+    width = MediaQuery.of(context).size.width;
+    mySlider.WaveSlider().generateBar(width - 25);
     peticiones().then((value) => print(value.toString()));
     //throw UnimplementedError();
     return Container(
@@ -114,7 +120,7 @@ class PageBody extends State<Body> {
             children = <Widget>[
               Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
+                color: Colors.black45,
                 size: 60,
               ),
               Padding(
@@ -140,6 +146,7 @@ class PageBody extends State<Body> {
                 child: CircularProgressIndicator(),
                 width: 60,
                 height: 60,
+
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 16),
@@ -156,48 +163,158 @@ class PageBody extends State<Body> {
           );
         },
       ),
+      color: Colors.black54,
     );
   }
 
   Future<Widget> peticiones() async {
-    var response = await http
-        .get('http://18.188.92.62:3000/mail');
-  var dat = response.body;
-    return Text('Tesultado $response.body.');
+    //var response = await http
+    //    .get('http://18.188.92.62:3000/mail');
+    //var dat = response.body;
+    //return Text('Tesultado $response.body.');
     return Container(
       child: Column(
         children: [
           Text(""),
           Text(""),
-          Text(""),
-          Text(""),
-          Text(
-            "50%",
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-          mySlider.WaveSlider(),
-          Text(""),
-          Text(""),
-          Text(""),
-          Text(""),
-          Text(""),
-          Text(""),
-          Text(
-            "50",
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-          Text(""),
-          Ink(
-            decoration: const ShapeDecoration(
-              color: Colors.lightBlue,
-              shape: CircleBorder(),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.shopping_basket),
-              color: Colors.lightBlue,
-              onPressed: () {},
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  print('Card tapped.');
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 122,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        "50",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      mySlider.WaveSlider(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  print('Card tapped.');
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 120,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        "50",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      Text(""),
+                      Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.lightGreen,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.shopping_basket),
+                          color: Colors.white70,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  print('Card tapped.');
+                },
+                child: Container(
+                  width: width - 26,
+                  height: 105,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Un paquete se encuentra en el buzon.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.blue,
+                                  Colors.green,
+                                ],
+                              )
+                        ),
+                      ),
+                      Text(
+                        'El nivel de desinfectante es menor del 10%.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.redAccent,
+                                  Colors.yellow,
+                                ],
+                              )
+                        ),
+                      ),
+                      Text(
+                        'El desinfectante se agoto.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                                const Offset(0, 20),
+                                const Offset(150, 20),
+                                <Color>[
+                                  Colors.red,
+                                  Colors.deepOrange,
+                                ],
+                              )
+                        ),
+                      ),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
         ],
       ),
     );
