@@ -33,10 +33,17 @@ class WaveSliderState extends State<WaveSlider> {
   double bar2Position = 0;
 
   _onTapDown(TapDownDetails details) {
-    var x = details.globalPosition.dx;
+ /*   var x = details.globalPosition.dx;
     print("tap down " + x.toString());
     setState(() {
       bar2Position = x;
+    });*/
+  }
+
+  void mover(int x){
+    print("tap down " + x.toString());
+    setState(() {
+      bar2Position = x as double;
     });
   }
 
@@ -49,7 +56,7 @@ class WaveSliderState extends State<WaveSlider> {
           alignment: Alignment.centerLeft,
           children: <Widget>[
             GestureDetector(
-              onTapDown: (TapDownDetails details) => _onTapDown(details),
+              //onTapDown: (TapDownDetails details) => _onTapDown(details),
               onHorizontalDragUpdate: (DragUpdateDetails details) {
                 setState(() {
                   bar2Position = details.globalPosition.dx;

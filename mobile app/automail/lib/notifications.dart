@@ -35,7 +35,7 @@ class NotificationProvider{
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        final noti = message['data']['comida'];
+        final noti = message['data']['msj'];
         print("------------------"+noti+"-----------------");
       },
     );
