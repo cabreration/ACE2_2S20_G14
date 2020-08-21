@@ -22,9 +22,13 @@ const options = {
 
 const payload = {
     notification: {
-       title: "New Notification",
-       body: "Duniham es mi heroe",
+       title: "Servidor Encendido",
+       body: "Test de notificacion",
     },
+    data: {
+        msj: 'notificacion1',
+        click_action: 'FLUTTER_NOTIFICATION_CLICK'
+    }
 };
 
 (async () => {
