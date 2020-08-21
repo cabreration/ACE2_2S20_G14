@@ -103,7 +103,7 @@ class PageBody extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    const fiveSeconds = const Duration(seconds: 10);
+    const fiveSeconds = const Duration(seconds: 5);
     final notifications = new NotificationProvider();
     notifications.initNotificacions();
     notifications.mensajes.listen((argumento) {
