@@ -11,6 +11,7 @@ int numberOfBars;
 * Cada barra se agrega con el tamano deseado.
 * */
 void randomNumberGenerator() {
+  bars.clear();
   for (var i = 0; i < numberOfBars; i++) {
     bars.add(10 + i);
   }
@@ -24,28 +25,30 @@ class WaveSlider extends StatefulWidget {
   * Metodo que genera el numero de barras que tendra el slider.
   * */
   void generateBar(double screenWidth) {
+    pixels = screenWidth/100;
     numberOfBars = screenWidth ~/ barWidth;
+    numeroDeBarras = numberOfBars;
     randomNumberGenerator();
   }
+
+  void mover(double x){
+    bar2Position = pixels*x ;
+  }
 }
+int numeroDeBarras =0;
+double pixels = 0;
+double bar2Position = 0;
 
 class WaveSliderState extends State<WaveSlider> {
-  double bar2Position = 0;
+
 
   _onTapDown(TapDownDetails details) {
- /*   var x = details.globalPosition.dx;
-    print("tap down " + x.toString());
+   var x = details.globalPosition.dx;
     setState(() {
       bar2Position = x;
-    });*/
-  }
-
-  void mover(int x){
-    print("tap down " + x.toString());
-    setState(() {
-      bar2Position = x as double;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +59,7 @@ class WaveSliderState extends State<WaveSlider> {
           alignment: Alignment.centerLeft,
           children: <Widget>[
             GestureDetector(
-              //onTapDown: (TapDownDetails details) => _onTapDown(details),
+              onTapDown: (TapDownDetails details) => _onTapDown(details),
               onHorizontalDragUpdate: (DragUpdateDetails details) {
                 setState(() {
                   bar2Position = details.globalPosition.dx;
@@ -69,9 +72,9 @@ class WaveSliderState extends State<WaveSlider> {
                   children: bars.map((int height) {
                     Color color;
                     if (barItem + 1 < bar2Position / barWidth) {
-                      if (barItem + 1 < 11) {
+                      if (barItem + 1 <= numeroDeBarras*0.1) {
                         color = Colors.red;
-                      } else if (barItem + 1 < 51) {
+                      } else if (barItem + 1 < numeroDeBarras*0.5) {
                         color = Colors.yellow;
                       } else {
                         color = Colors.green;

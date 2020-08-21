@@ -7,6 +7,8 @@ import 'notifications.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 List<int> bars = [];
 const barWidth = 5.0;
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Automail",
       home: Scaffold(
         appBar: AppBar(
@@ -96,10 +99,11 @@ class Body extends StatefulWidget {
 
 class PageBody extends State<Body> {
   double width;
+  double widthCards;
 
   @override
   Widget build(BuildContext context) {
-    const fiveSeconds = const Duration(seconds: 5);
+    const fiveSeconds = const Duration(seconds: 10);
     final notifications = new NotificationProvider();
     notifications.initNotificacions();
     notifications.mensajes.listen((argumento) {
@@ -137,7 +141,6 @@ class PageBody extends State<Body> {
                     ],
                   )),
           );
-
           break;
         case "notificacion3":
           notificacionRoja = Text(
@@ -159,9 +162,9 @@ class PageBody extends State<Body> {
     });
 
     width = MediaQuery.of(context).size.width;
+    widthCards = width - 25;
     mySlider.WaveSlider().generateBar(width - 25);
-
-    Timer.periodic(fiveSeconds, (Timer t) => peticiones().then((value) => print(value.toString())));
+    var data = Timer.periodic(fiveSeconds, (Timer t) => peticiones().then((value) => print(value.toString())));
 
     return Container(
       color: Colors.black45,
@@ -174,11 +177,13 @@ class PageBody extends State<Body> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  nivelDesnfectante++;
-                  mySlider.WaveSliderState().mover(nivelDesnfectante);
+                  mySlider.WaveSlider().mover((nivelDesnfectante.toDouble()*20));
+                  setState(() {
+
+                  });
                 },
                 child: Container(
-                  width: width - 26,
+                  width: widthCards,
                   height: 122,
                   child: Column(
                     children: [
@@ -204,7 +209,6 @@ class PageBody extends State<Body> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  pesoObjeto++;
                   icono = IconButton(
                     icon: Icon(Icons.shopping_basket),
                     color: Colors.white70,
@@ -213,7 +217,7 @@ class PageBody extends State<Body> {
                   setState(() {});
                 },
                 child: Container(
-                  width: width - 26,
+                  width: widthCards,
                   height: 120,
                   child: Column(
                     children: [
@@ -238,9 +242,9 @@ class PageBody extends State<Body> {
           ),
           Text(""),
           Text(""),
-          //   Text(""),
-          //   Text(""),
-          //   Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
           Center(
             child: Card(
               child: InkWell(
@@ -292,7 +296,7 @@ class PageBody extends State<Body> {
                   setState(() {});
                 },
                 child: Container(
-                  width: width - 26,
+                  width: widthCards,
                   height: 120,
                   padding: EdgeInsets.all(16.0),
                   child: Column(
@@ -309,18 +313,33 @@ class PageBody extends State<Body> {
           ),
           Text(""),
           Text(""),
-          Text(""),
-          Text(""),
-          Text(""),
+          //Text(""),
         ],
       ),
     );
   }
 
-  Future<String> peticiones() async {
+  peticiones() async {
     var response = await http.get('http://18.188.92.62:3000/mail');
-    var data = response.body;
+    Map data = json.decode(response.body);
+    pesoObjeto = data["peso"];
+    nivelDesnfectante = data["liquido"];
+    mySlider.WaveSlider().mover(nivelDesnfectante.toDouble());
+    if(pesoObjeto==0){
+      icono = IconButton(
+        icon: Icon(Icons.shopping_basket),
+        color: Colors.lightGreen,
+        onPressed: () {},
+      );
+    }else{
+      icono = IconButton(
+        icon: Icon(Icons.shopping_basket),
+        color: Colors.white,
+        onPressed: () {},
+      );
+    }
+    setState(() {
 
-    return data;
+    });
   }
 }
