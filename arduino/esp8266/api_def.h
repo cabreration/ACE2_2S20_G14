@@ -50,15 +50,21 @@ void process_api_request(String request_name) {
   // comparar con cada elemento del arreglo de nombres de rutas
   for (routeCheckIndex = 0; routeCheckIndex < routeCount; routeCheckIndex++) {
     debug(String("Comparando con la ruta almacenada: ") + routes[routeCheckIndex]);
+    debug(String(routes[routeCheckIndex] == request_name));
     // si la ruta proporcionada es igual a la ruta que esta almacenada
     if (request_name.equals(routes[routeCheckIndex])) {
+      
+      Serial.write('#');
+      
       debug("Llamando a la funcion emparejada de la ruta");
       // llamar a la funcion desde el arreglo de funciones, que esta emparejada
       // con la ruta que se encontro
+      
+      delay(500);
       (*functions[routeCheckIndex])();
       // el proceso puede ser finalizado
       break;
-    }   
+    }
   }
 }
 
