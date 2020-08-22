@@ -3,7 +3,6 @@
 #define echoUltraSonic A8
 #define triggerUltraSonic A9
 
-
 //pines digitales para los sensores de proximidad
 #define proximitySensorA 31
 #define proximitySensorB 33
@@ -24,5 +23,5 @@
 #define stDoorA 9
 #define stDoorB 43
 
-#define servoDoorB 10 
+#define servoDoorB 10
 #define servoDoorA 45
