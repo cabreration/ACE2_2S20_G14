@@ -17,8 +17,13 @@ module.exports = (app, admin) => {
         
         if (req.query.spray != undefined && req.query.spray != null) {
             Common.SANITIZER = req.query.spray
+            if (Common.SANITIZER > 174)
+                Common.SANITIZER = 174
+            if (Common.SANITIZER < 64)
+                Common.SANITIZER = 64
+
+            Common.SANITIZER = -0.901*Common.SANITIZER + 174
         }
-        Common.SANITIZER = req.query.spray
     
         // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
         if (Common.WEIGHT > 360 && (Math.abs(Common.WEIGHT - Common.PREVIOUS) > 50)) {
@@ -42,7 +47,7 @@ module.exports = (app, admin) => {
         }
 
         // Si el sanitizador esta en menos que 10% y no se ha enviado la notificacion
-        if (Common.SANITIZER > 160 && Common.SANITIZER < 174 && !Common.SA_SENT) {
+        if (Common.SANITIZER <= 10 && Common.SANITIZER > 1 && !Common.SA_SENT) {
             const payload = {
                 notification: {
                     title: 'Liquido',
@@ -63,7 +68,7 @@ module.exports = (app, admin) => {
             }
         }
 
-        if (Common.SANITIZER >= 174 && !Common.SA_SENT2) {
+        if (Common.SANITIZER < 1 && !Common.SA_SENT2) {
             const payload = {
                 notification: {
                     title: 'Liquido',
@@ -84,7 +89,7 @@ module.exports = (app, admin) => {
             }
         }
 
-        if (Common.SANITIZER < 160) {
+        if (Common.SANITIZER > 10) {
             Common.SA_SENT = false
             Common.SA_SENT2 = false
         }
