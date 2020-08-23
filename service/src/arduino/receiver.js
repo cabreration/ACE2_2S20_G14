@@ -17,12 +17,12 @@ module.exports = (app, admin) => {
         
         if (req.query.spray != undefined && req.query.spray != null) {
             Common.SANITIZER = req.query.spray
-            if (Common.SANITIZER > 178)
-                Common.SANITIZER = 178
+            if (Common.SANITIZER > 173)
+                Common.SANITIZER = 173
             if (Common.SANITIZER < 64)
                 Common.SANITIZER = 64
 
-            Common.SANITIZER = Math.round(-0.8772*Common.SANITIZER + 178)
+            Common.SANITIZER = Math.round(-0.91743*Common.SANITIZER + 173)
         }
     
         // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
