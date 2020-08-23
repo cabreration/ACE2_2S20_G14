@@ -22,7 +22,7 @@ module.exports = (app, admin) => {
             if (Common.SANITIZER < 64)
                 Common.SANITIZER = 64
 
-            Common.SANITIZER = -0.901*Common.SANITIZER + 174
+            Common.SANITIZER = Math.round(-0.901*Common.SANITIZER + 174)
         }
     
         // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
