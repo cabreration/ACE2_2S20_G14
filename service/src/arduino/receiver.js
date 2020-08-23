@@ -84,7 +84,7 @@ module.exports = (app, admin) => {
             }
         }
 
-        if (Common.SANITIZER > 10) {
+        if (Common.SANITIZER < 160) {
             Common.SA_SENT = false
             Common.SA_SENT2 = false
         }
