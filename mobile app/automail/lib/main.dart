@@ -164,7 +164,7 @@ class PageBody extends State<Body> {
     width = MediaQuery.of(context).size.width;
     widthCards = width - 25;
     mySlider.WaveSlider().generateBar(width - 25);
-    var data = Timer.periodic(fiveSeconds, (Timer t) => peticiones().then((value) => print(value.toString())));
+    Timer.periodic(fiveSeconds, (Timer t) => peticiones().then((value) => print(value.toString())));
 
     return Container(
       color: Colors.black45,
@@ -189,7 +189,7 @@ class PageBody extends State<Body> {
                     children: [
                       Text(""),
                       Text(
-                        nivelDesnfectante.toString(),
+                        nivelDesnfectante.toString()+"%",
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                       mySlider.WaveSlider(),
@@ -223,7 +223,7 @@ class PageBody extends State<Body> {
                     children: [
                       Text(""),
                       Text(
-                        pesoObjeto.toString(),
+                        pesoObjeto.toString()+" gramos",
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                       Text(""),
@@ -319,27 +319,40 @@ class PageBody extends State<Body> {
     );
   }
 
-  peticiones() async {
-    var response = await http.get('http://18.188.92.62:3000/mail');
-    Map data = json.decode(response.body);
-    pesoObjeto = data["peso"];
-    nivelDesnfectante = data["liquido"];
-    mySlider.WaveSlider().mover(nivelDesnfectante.toDouble());
-    if(pesoObjeto==0){
+  Future<String> peticiones() async {
+    try {
+      var response = await http.get('http://18.188.92.62:3000/mail');
+      Map data = json.decode(response.body);
+      pesoObjeto =  int.parse(data["peso"]);
+      nivelDesnfectante = data["liquido"];
+      mySlider.WaveSlider().mover(nivelDesnfectante.toDouble());
+      if(pesoObjeto==0){
+        icono = IconButton(
+          icon: Icon(Icons.shopping_basket),
+          color: Colors.lightGreen,
+          onPressed: () {},
+        );
+      }else{
+        icono = IconButton(
+          icon: Icon(Icons.shopping_basket),
+          color: Colors.white,
+          onPressed: () {},
+        );
+      }
+    }catch(x){
+      pesoObjeto = 0;
+      nivelDesnfectante = 0;
       icono = IconButton(
         icon: Icon(Icons.shopping_basket),
         color: Colors.lightGreen,
         onPressed: () {},
       );
-    }else{
-      icono = IconButton(
-        icon: Icon(Icons.shopping_basket),
-        color: Colors.white,
-        onPressed: () {},
-      );
     }
+
     setState(() {
 
     });
+    return "";
+
   }
 }

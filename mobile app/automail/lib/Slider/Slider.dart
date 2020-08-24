@@ -71,10 +71,10 @@ class WaveSliderState extends State<WaveSlider> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: bars.map((int height) {
                     Color color;
-                    if (barItem + 1 < bar2Position / barWidth) {
-                      if (barItem + 1 <= numeroDeBarras*0.1) {
+                    if (barItem  < bar2Position / barWidth) {
+                      if (barItem  <= numeroDeBarras*0.1) {
                         color = Colors.red;
-                      } else if (barItem + 1 < numeroDeBarras*0.5) {
+                      } else if (barItem  < numeroDeBarras*0.5) {
                         color = Colors.yellow;
                       } else {
                         color = Colors.green;
