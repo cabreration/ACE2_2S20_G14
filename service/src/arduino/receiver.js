@@ -19,10 +19,10 @@ module.exports = (app, admin) => {
             Common.SANITIZER = req.query.spray
             if (Common.SANITIZER > 173)
                 Common.SANITIZER = 173
-            if (Common.SANITIZER < 64)
-                Common.SANITIZER = 64
+            if (Common.SANITIZER < 68)
+                Common.SANITIZER = 68
 
-            Common.SANITIZER = Math.round(-0.91743*Common.SANITIZER + 173)
+            Common.SANITIZER = Math.floor(-(20/21)*Common.SANITIZER + 164.762)
         }
     
         // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
