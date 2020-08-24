@@ -6,7 +6,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 void debug(String val) {
 #if DEBUG
@@ -91,7 +91,7 @@ String app_request(String link) {
     //close connection
     http.end();
 
-    debug(String("Respuesta obtenida: ") + result);
+    Serial.println(result);
     return result;
   }
 
@@ -106,7 +106,11 @@ void loop() {
     //Obtener valor ingresado del serial
     String request_name = Serial.readString();
     request_name.trim();
+    
     //procesar la llamada a la API
     process_api_request(request_name);
+
+    //Serial.write('#');
+    delay(1000);
   }
 }

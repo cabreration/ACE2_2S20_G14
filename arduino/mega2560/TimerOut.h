@@ -3,7 +3,6 @@
 #include <TimerOne.h>
 
 class TimerOut: public Thread {
-  private:
     unsigned long interval;
     byte pinOut;
 
@@ -11,8 +10,7 @@ class TimerOut: public Thread {
 
   public:
     byte enabled = 0;
-
-    TimerOut(unsigned long _interval, byte _pinOut): interval{_interval}, pinOut{_pinOut}, Thread()
+    TimerOut(unsigned long _interval, byte _pinOut): interval{_interval / 10}, pinOut{_pinOut}, Thread()
     {
       pinMode(pinOut, OUTPUT);
     }
@@ -27,6 +25,7 @@ class TimerOut: public Thread {
         digitalWrite(pinOut, LOW);
         beginMillis = 0;
       }
+
       runned();
     }
 };

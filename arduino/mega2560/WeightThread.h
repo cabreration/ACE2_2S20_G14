@@ -4,7 +4,6 @@
 #include <TimerOne.h>
 
 class WeightThread: public Thread {
-  private:
     byte pinData = 0;
     byte pinClock = 0;
     HX711 sWeight;
@@ -12,9 +11,9 @@ class WeightThread: public Thread {
 
   public:
     long zeroFactor = 0;
-    float weigthValue = 0.0;
+    int weigthValue = 0;
 
-    WeightThread(byte _pinData, byte _pinClock): pinClock {_pinClock}, pinData{ _pinData }, Thread()
+    WeightThread ( byte _pinData, byte _pinClock): pinClock {_pinClock}, pinData{ _pinData }, Thread()
     {
       sWeight.begin(pinData, pinClock);
       sWeight.set_scale();
@@ -23,9 +22,10 @@ class WeightThread: public Thread {
       zeroFactor = sWeight.read_average();
     }
 
-    void run()
+    void run ()
     {
-      weigthValue = sWeight.get_units();
+      //peso del objeto en mg
+      weigthValue = abs(sWeight.get_units()) * 1000;
       runned();
     }
 };

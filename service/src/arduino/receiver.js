@@ -11,11 +11,24 @@ module.exports = (app, admin) => {
 
     app.get('/arduino', async(req, res) => {
         Common.PREVIOUS = Common.WEIGHT
-        Common.WEIGHT = req.query.peso
-        Common.SANITIZER = req.query.spray
+        if (req.query.peso != undefined && req.query.peso != null) {
+            Common.WEIGHT = req.query.peso
+        }
+        
+        if (req.query.spray != undefined && req.query.spray != null) {
+            Common.SANITIZER = req.query.spray
+            if (Common.SANITIZER > 173)
+                Common.SANITIZER = 173
+            if (Common.SANITIZER < 68)
+                Common.SANITIZER = 68
+
+            Common.SANITIZER = Math.floor(-(20/21)*Common.SANITIZER + 164.762)
+            if (Common.SANITIZER < 0)
+                Common.SANITIZER = 0
+        }
     
         // Si los pesos son diferentes y mayores a cero entonces se notifica de nuevo
-        if (Common.WEIGHT > 0 && (Math.abs(Common.WEIGHT - Common.PREVIOUS) > 1)) {
+        if (Common.WEIGHT > 360 && (Math.abs(Common.WEIGHT - Common.PREVIOUS) > 50)) {
             const payload = {
                 notification: {
                     title: 'Entrega',
@@ -36,7 +49,7 @@ module.exports = (app, admin) => {
         }
 
         // Si el sanitizador esta en menos que 10% y no se ha enviado la notificacion
-        if (Common.SANITIZER < 10 && Common.SANITIZER >= 1 && !Common.SA_SENT) {
+        if (Common.SANITIZER <= 10 && Common.SANITIZER > 1 && !Common.SA_SENT) {
             const payload = {
                 notification: {
                     title: 'Liquido',

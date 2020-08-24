@@ -1,11 +1,9 @@
-
 #include <Servo.h>
 #include "Thread.h"
 #include "ThreadController.h"
 #include <TimerOne.h>
 
 class LockThread: public Thread {
-  private:
     byte OpVelocity = 0;
     byte ClVelocity = 0;
     byte pinServo = 0;
@@ -39,7 +37,6 @@ class LockThread: public Thread {
 
     void run ()
     {
-
       if (state == 1 && digitalRead(pinState) == 1) {
         servo.write(90); // servo parado.
       }
