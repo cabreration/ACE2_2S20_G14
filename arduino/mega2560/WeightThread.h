@@ -1,4 +1,4 @@
-#include "HX711.h"
+
 #include "Thread.h"
 #include "ThreadController.h"
 #include <TimerOne.h>
