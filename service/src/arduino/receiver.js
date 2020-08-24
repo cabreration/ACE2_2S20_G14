@@ -49,7 +49,7 @@ module.exports = (app, admin) => {
         }
 
         // Si el sanitizador esta en menos que 10% y no se ha enviado la notificacion
-        if (Common.SANITIZER <= 10 && Common.SANITIZER > 1 && !Common.SA_SENT) {
+        if (Common.SANITIZER <= 11 && Common.SANITIZER > 1 && !Common.SA_SENT) {
             const payload = {
                 notification: {
                     title: 'Liquido',
