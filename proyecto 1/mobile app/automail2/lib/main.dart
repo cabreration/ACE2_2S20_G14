@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'pages/main_page.dart';
+import 'dashboard.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(new MyApp());
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context)
-  {
-    return MaterialApp
-    (
-      title: 'Dashboard',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MainPage(),
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'Automail2',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Dashboard(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
