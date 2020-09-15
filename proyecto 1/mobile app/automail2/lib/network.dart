@@ -20,3 +20,14 @@ Future<Map> peticiones() async {
     return null;
   }
 }
+
+Future<Map> CambiarEstado() async {
+  try {
+    var response = await http.patch('http://18.188.92.62:3000/mail');
+    Map data = json.decode(response.body);
+    return data;
+  }
+  catch(x){
+    return null;
+  }
+}

@@ -40,8 +40,10 @@ class NotificationProvider {
 
   obtenerMensaje() {
     mensajes.listen((mensaje) {
+      print("1234567890------------------------------------");
       return mensaje;
     });
+    return "hola mundo";
   }
 
   dispose() {

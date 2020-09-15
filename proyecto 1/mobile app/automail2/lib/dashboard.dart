@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'network.dart';
 import 'notifications.dart';
@@ -12,6 +14,10 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final notifications = new NotificationProvider();
     String mensaje = notifications.obtenerMensaje();
+
+    const seconds = const Duration(seconds: 5);
+    Timer.periodic(seconds,
+        (Timer t) => peticiones().then((value) => print("----------------------------------------------")));
 
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +43,8 @@ class _DashboardState extends State<Dashboard> {
                 Color.fromRGBO(0, 204, 204, 1)),
             makeDashboardItemState(),
             makeDashboardItemCanvas(_posX, _posY),
-            makeDashboardItem("Notificaciones", "orale prro", null, Colors.orange),
+            makeDashboardItemnNotficacion(
+                "Notificaciones", mensaje, Colors.orange),
           ],
         ),
       ),
@@ -141,7 +148,41 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
-  double _posX = 20;
+  Card makeDashboardItemnNotficacion(
+      String title, String textItem, Color color) {
+    return Card(
+        elevation: 1.0,
+        margin: new EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(color: color),
+          child: new InkWell(
+            onTap: () {},
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              verticalDirection: VerticalDirection.down,
+              children: <Widget>[
+                SizedBox(height: 10.0),
+                new Center(
+                  child: new Text(title,
+                      textAlign: TextAlign.center,
+                      style:
+                          new TextStyle(fontSize: 14.0, color: Colors.white)),
+                ),
+                SizedBox(height: 20.0),
+                new Center(
+                  child: new Text(textItem,
+                      textAlign: TextAlign.center,
+                      style:
+                          new TextStyle(fontSize: 12.0, color: Colors.white)),
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  double _posX = 19;
   double _posY = 20;
   Card makeDashboardItemCanvas(double posX, double posY) {
     return Card(
@@ -156,7 +197,6 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-
 
 /*
   Future<String> peiciones() async {
@@ -201,6 +241,7 @@ class FaceOutlinePainter extends CustomPainter {
   set posY(value) {
     _posY = value;
   }
+
   set posX(value) {
     _posX = value;
   }
@@ -235,10 +276,13 @@ class FaceOutlinePainter extends CustomPainter {
     // Mouth
     final mouthPoint = Path();
     mouthPoint.addOval(Rect.fromLTWH(_posX, _posY, 2, 2));
+    print("---------------");
+    print(_posX);
+    print("---------------");
 
     canvas.drawPath(mouthPoint, paintWhite);
   }
 
   @override
-  bool shouldRepaint(FaceOutlinePainter oldDelegate) => false;
+  bool shouldRepaint(FaceOutlinePainter oldDelegate) => true;
 }
