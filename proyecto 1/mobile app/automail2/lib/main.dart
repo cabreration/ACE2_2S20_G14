@@ -1,117 +1,358 @@
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
+import 'Slider/Slider.dart' as mySlider;
+import 'network.dart';
+import 'notifications.dart';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+
+List<int> bars = [];
+const barWidth = 5.0;
+double screenWidth;
+int numberOfBars;
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      debugShowCheckedModeBanner: false,
+      title: "Automail",
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Automail"),
+          backgroundColor: Colors.orange,
+        ),
+        body: Column(
+          children: [Body()],
+        ),
+        //  backgroundColor: Colors.black12,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+var icono = IconButton(
+  icon: Icon(Icons.shopping_basket),
+  color: Colors.lightGreen,
+  onPressed: () {},
+);
+var notificacionVerde = Text(
+  'Un paquete se encuentra en el buzon.',
+  style: TextStyle(
+      fontSize: 14,
+      foreground: Paint()
+        ..shader = ui.Gradient.linear(
+          const Offset(0, 20),
+          const Offset(150, 20),
+          <Color>[
+            Colors.black38,
+            Colors.grey,
+          ],
+        )),
+);
+var notificacionAnaranjada = Text(
+  'El nivel de desinfectante es menor del 10%.',
+  style: TextStyle(
+      fontSize: 14,
+      foreground: Paint()
+        ..shader = ui.Gradient.linear(
+          const Offset(0, 20),
+          const Offset(150, 20),
+          <Color>[
+            Colors.black38,
+            Colors.grey,
+          ],
+        )),
+);
+var notificacionRoja = Text(
+  'El desinfectante se agoto.',
+  style: TextStyle(
+      fontSize: 14,
+      foreground: Paint()
+        ..shader = ui.Gradient.linear(
+          const Offset(0, 20),
+          const Offset(150, 20),
+          <Color>[
+            Colors.black38,
+            Colors.grey,
+          ],
+        )),
+);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+int nivelDesnfectante = 0;
+int pesoObjeto = 0;
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class Body extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<StatefulWidget> createState() {
+    return PageBody();
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class PageBody extends State<Body> {
+  double width;
+  double widthCards;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    const fiveSeconds = const Duration(seconds: 5);
+    final notifications = new NotificationProvider();
+    notifications.initNotificacions();
+    notifications.mensajes.listen((argumento) {
+      print("contenido del mensaje");
+      print(argumento);
+      switch (argumento) {
+        case "notificacion1":
+          notificacionVerde = Text(
+            'Un paquete se encuentra en el buzon.',
+            style: TextStyle(
+                fontSize: 14,
+                foreground: Paint()
+                  ..shader = ui.Gradient.linear(
+                    const Offset(0, 20),
+                    const Offset(150, 20),
+                    <Color>[
+                      Colors.blue,
+                      Colors.green,
+                    ],
+                  )),
+          );
+          break;
+        case "notificacion2":
+          notificacionAnaranjada = Text(
+            'El nivel de desinfectante es menor del 10%.',
+            style: TextStyle(
+                fontSize: 14,
+                foreground: Paint()
+                  ..shader = ui.Gradient.linear(
+                    const Offset(0, 20),
+                    const Offset(150, 20),
+                    <Color>[
+                      Colors.redAccent,
+                      Colors.yellow,
+                    ],
+                  )),
+          );
+          break;
+        case "notificacion3":
+          notificacionRoja = Text(
+            'El desinfectante se agoto.',
+            style: TextStyle(
+                fontSize: 14,
+                foreground: Paint()
+                  ..shader = ui.Gradient.linear(
+                    const Offset(0, 20),
+                    const Offset(150, 20),
+                    <Color>[
+                      Colors.red,
+                      Colors.deepOrange,
+                    ],
+                  )),
+          );
+      }
+      setState(() {});
+    });
+
+    width = MediaQuery.of(context).size.width;
+    widthCards = width - 25;
+    mySlider.WaveSlider().generateBar(width - 25);
+    Timer.periodic(fiveSeconds, (Timer t) => peticiones().then((value) => print(value.toString())));
+
+    return Container(
+      color: Colors.black45,
+      child: Column(
+        children: [
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  mySlider.WaveSlider().mover((nivelDesnfectante.toDouble()*20));
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: widthCards,
+                  height: 122,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        nivelDesnfectante.toString()+"%",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      mySlider.WaveSlider(),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  icono = IconButton(
+                    icon: Icon(Icons.shopping_basket),
+                    color: Colors.white70,
+                    onPressed: () {},
+                  );
+                  setState(() {});
+                },
+                child: Container(
+                  width: widthCards,
+                  height: 120,
+                  child: Column(
+                    children: [
+                      Text(""),
+                      Text(
+                        pesoObjeto.toString()+" gramos",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      Text(""),
+                      Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.lightGreen,
+                          shape: CircleBorder(),
+                        ),
+                        child: icono,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Center(
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  notificacionVerde = Text(
+                    'Un paquete se encuentra en el buzon.',
+                    style: TextStyle(
+                        fontSize: 14,
+                        foreground: Paint()
+                          ..shader = ui.Gradient.linear(
+                            const Offset(0, 20),
+                            const Offset(150, 20),
+                            <Color>[
+                              Colors.black38,
+                              Colors.grey,
+                            ],
+                          )),
+                  );
+                  notificacionAnaranjada = Text(
+                    'El nivel de desinfectante es menor del 10%.',
+                    style: TextStyle(
+                        fontSize: 14,
+                        foreground: Paint()
+                          ..shader = ui.Gradient.linear(
+                            const Offset(0, 20),
+                            const Offset(150, 20),
+                            <Color>[
+                              Colors.black38,
+                              Colors.grey,
+                            ],
+                          )),
+                  );
+                  notificacionRoja = Text(
+                    'El desinfectante se agoto.',
+                    style: TextStyle(
+                        fontSize: 14,
+                        foreground: Paint()
+                          ..shader = ui.Gradient.linear(
+                            const Offset(0, 20),
+                            const Offset(150, 20),
+                            <Color>[
+                              Colors.black38,
+                              Colors.grey,
+                            ],
+                          )),
+                  );
+
+                  setState(() {});
+                },
+                child: Container(
+                  width: widthCards,
+                  height: 120,
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      notificacionVerde,
+                      notificacionAnaranjada,
+                      notificacionRoja,
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(""),
+          Text(""),
+          //Text(""),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Future<String> peticiones() async {
+    try {
+      var response = await http.get('http://18.188.92.62:3000/mail');
+      Map data = json.decode(response.body);
+      pesoObjeto =  int.parse(data["peso"]);
+      nivelDesnfectante = data["liquido"];
+      mySlider.WaveSlider().mover(nivelDesnfectante.toDouble());
+      if(pesoObjeto==0){
+        icono = IconButton(
+          icon: Icon(Icons.shopping_basket),
+          color: Colors.lightGreen,
+          onPressed: () {},
+        );
+      }else{
+        icono = IconButton(
+          icon: Icon(Icons.shopping_basket),
+          color: Colors.white,
+          onPressed: () {},
+        );
+      }
+    }catch(x){
+      pesoObjeto = 0;
+      nivelDesnfectante = 0;
+      icono = IconButton(
+        icon: Icon(Icons.shopping_basket),
+        color: Colors.lightGreen,
+        onPressed: () {},
+      );
+    }
+
+    setState(() {
+
+    });
+    return "";
+
   }
 }

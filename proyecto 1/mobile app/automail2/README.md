@@ -1,6 +1,6 @@
-# automail2
+# automail
 
-app para proyecto 1 de arqui 2
+Practica 1 - Arquitectura de computadores y ensambladores 2  
 
 ## Getting Started
 
