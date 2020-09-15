@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Automail2',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: Dashboard(),
       debugShowCheckedModeBanner: false,
