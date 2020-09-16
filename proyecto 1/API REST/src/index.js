@@ -36,7 +36,7 @@ const aws_keys = {
     region: 'us-east-2',
     endpoint: 'http://dynamodb.us-east-2.amazonaws.com'
 }
-AWS.config.loadFromPath('./awsConfig.json')
+AWS.config.loadFromPath('./src/awsConfig.json')
 const ddb = new AWS.DynamoDB(aws_keys)
 aws_utils = {
     AWS: AWS,
@@ -48,9 +48,10 @@ aws_utils = {
 const travel = require('./arduino/travel')(app, aws_utils)
 const shipping = require('./arduino/shipping')(app, aws_utils, firebase)
 const switchEngine = require('./mobile/switch')(app)
+const reporterEngine = require('./mobile/reporter')(app, aws_utils)
 
 
-
+// push notification test
 const options = {
     priority: "normal",
     timeToLive: 60 * 60 * 24
