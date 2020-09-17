@@ -45,9 +45,6 @@ module.exports = (app, aws_utils) => {
             case "3":
                 string_state = 'detenido por un obstaculo'
                 break
-            case "4":
-                string_state = 'ha ocurrido un error'
-                break
         }
 
         ddb.putItem({
