@@ -119,6 +119,64 @@ module.exports = (app, aws_utils, firebase) => {
 
         }
 
+        // push notifications
+        const options = {
+            priority: "normal",
+            timeToLive: 60 * 60 * 24
+        };
+
+        let payload = null
+
+        if (state == 0) { 
+            payload = {
+                notification: {
+                    title: "Inicio de Entrega",
+                    body: "El dispositivo se dispone a salir del buzon",
+                },
+                data: {
+                    msj: `El peso del objeto es de ${weight},
+                        el dispositivo salio el ${(new Date()).toDateString()}`,
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK'
+                }
+            };
+        }
+        else if (state == 1) {
+            payload = {
+                notification: {
+                    title: "Entrega de paquete",
+                    body: "El dispositivo se encuentra completando la entrega",
+                },
+                data: {
+                    msj: `El peso del objeto es de ${weight},
+                     el dispositivo salio el ${(new Date()).toDateString()}
+                     y se encontraron ${common.obstacles} obstaculos`,
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK'
+                }
+            };
+        }
+        else {
+            payload = {
+                notification: {
+                    title: "Retorno a buzon",
+                    body: "El dispositivo se dispone a regresar al buzon",
+                },
+                data: {
+                    msj: `El dispositivo salio el ${(new Date()).toDateString()}
+                     y se encontraron ${common.obstacles} obstaculos`,
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK'
+                }
+            };
+        }
+
+        (async () => {
+            try{
+             let result = await firebase.admin.messaging().sendToDevice(firebase.token, payload, options);
+             console.log(result);
+            }catch(err){
+             console.log(err);
+            }
+        })();
+
         // restart the count of obstacles
         if (state != 0) {
             common.obstacles = 0
