@@ -1,3 +1,4 @@
+const { y_axis } = require('../arduino/common')
 let common = require('../arduino/common')
 
 module.exports = (app, aws_utils) => {
@@ -63,7 +64,9 @@ module.exports = (app, aws_utils) => {
                 avg_come: common.avg_come.toString(),
                 total_obstacles: common.total_obstacles.toString(),
                 avg_weight: common.avg_weight.toString(),
-                total_delivered: common.total_delivered.toString()
+                total_delivered: common.total_delivered.toString(),
+                x_axis: common.x_axis.toString(),
+                y_axis: common.y_axis.toString()
             }
             res.send(response)
         }, 3000)

@@ -62,6 +62,27 @@ module.exports = (app, aws_utils) => {
             }
         })
 
+        if (state == 1) {
+            if (angle == 'x') {
+                common.x_axis = Number(distance)
+                common.y_axis = 0
+            }
+            else {
+                common.y_axis = Number(distance)
+                common.x_axis = 0
+            }
+        }
+        else if (state == 2) {
+            if (angle == 'x') {
+                common.x_axis = 150 - Number(distance)
+                common.y_axis = 0
+            }
+            else {
+                common.y_axis = 150 - Number(distance)
+                common.x_axis = 0
+            }
+        }
+
         res.send(common.state)
     })
 }
