@@ -5,20 +5,21 @@
 
 
 //pines digitales del sensor de linea:
-#define lineFollower_S1_RO  39
-#define lineFollower_S2_RI  41
-#define lineFollower_S3_C  43
-#define lineFollower_S4_LI  45
-#define lineFollower_S5_LO  47
-#define lineFollower_Bump  49
-#define lineFollower_Near  51
+#define lineFollower_S1_RO  49
+#define lineFollower_S2_RI  47
+#define lineFollower_S3_C  45
+#define lineFollower_S4_LI  43
+#define lineFollower_S5_LO  41
+#define lineFollower_Bump  39
+#define lineFollower_Near  37 //blanco
 
+blanco, gris, morado, azul, verde, amarillo naranja, rojo, gris
 
 //pines digitales para el sensor de peso: 
 
 //pines digitales para el sensor de peso
-#define wgtData 23
-#define wgtClock 25
+#define wgtData 29
+#define wgtClock 27
 
 //direcciones I2C 
 #define I2CAddressESP 8
@@ -26,7 +27,7 @@
 
 
 // pines de estado 
-#define led_line 52 
+#define led_line 28
 
 
 
