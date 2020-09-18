@@ -56,7 +56,16 @@ module.exports = (app, aws_utils) => {
         })
         
         setTimeout(() => {
-            res.send(common)
+            response = {
+                obstacles: common.obstacles.toString(),
+                state: common.state,
+                avg_go: common.avg_go.toString(),
+                avg_come: common.avg_come.toString(),
+                total_obstacles: common.total_obstacles.toString(),
+                avg_weight: common.avg_weight.toString(),
+                total_delivered: common.total_delivered.toString()
+            }
+            res.send(response)
         }, 3000)
     })
 }
