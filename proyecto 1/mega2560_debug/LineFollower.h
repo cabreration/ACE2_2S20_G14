@@ -11,10 +11,10 @@
 #define line false // linea blanca = true linea negra = false
 
 //variables para el uso de motores
-AF_DCMotor motor_R1(1, MOTOR12_1KHZ); //motor derecho frontal
-AF_DCMotor motor_R2(4, MOTOR12_1KHZ); //motor derecho trasero
-AF_DCMotor motor_L1(2, MOTOR12_1KHZ); //motor izquierdo frontal
-AF_DCMotor motor_L2(3, MOTOR12_1KHZ); //motor izquierdo trasero
+AF_DCMotor motor_R1(4, MOTOR12_1KHZ); //motor derecho frontal
+AF_DCMotor motor_R2(3, MOTOR12_1KHZ); //motor derecho trasero
+AF_DCMotor motor_L1(1, MOTOR12_1KHZ); //motor izquierdo frontal
+AF_DCMotor motor_L2(2, MOTOR12_1KHZ); //motor izquierdo trasero
 
 
 //verifica si hay algún obstaculo
