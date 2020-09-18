@@ -1,7 +1,7 @@
 #include <Wire.h>
 
-/*
-
+#define DEBUG 0
+ #if DEBUG
 //variables para la transmision de datos;
 int travel_array[4] = {
   0,0,0,0
@@ -65,4 +65,4 @@ void updateState () {
     state_from_server != Wire.read(); 
   }
 }
-*/
+#endif
