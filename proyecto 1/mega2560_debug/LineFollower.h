@@ -26,22 +26,17 @@ is_front_free(){
     if (distance_front < 5 ){
       #if DEBUG
        travel_array[1] = 3;
-      sendTravel();
+  //    sendTravel();
       #endif
         while(distance_front < 50 ){
           #if DEBUG
-          if( millis()-  actualMillis > ping_server*5) {
-            actualMillis = millis();
-            
-            sendTravel();
-           
-          }
+        
            #endif
           read_distance_front();
         }
         #if DEBUG
         travel_array[1] = 1;
-        sendTravel();
+ //       sendTravel();
         #endif 
     }
 }
@@ -73,7 +68,7 @@ void shipping() {
   // se indica el estado= en camino a enttravel1] = 1;
   travel_array[1] = 1;
   // se manda el nuevo status
-  sendTravel();
+//  sendTravel();
 #endif
   //mientras que S1 y S5 no sean igual a linea entonces que se reptia el ciclo
   //se puede usar el sensor de baches tambien
@@ -114,8 +109,8 @@ void shipping() {
     // se actualiza el estatus actual de todo
     if ( millis() - actual_millis_SP > ping_server*3 ){
       actual_millis_SP = millis();
-      sendTravel();
-      updateState();
+    //  sendTravel();
+    //  updateState();
     }
   #endif
   } 
@@ -137,7 +132,7 @@ void comeback() {
   // se indica el estado= en camino a enttravel1] = 1;
   travel_array[1] = 2;
   // se manda el nuevo status
-  sendTravel();
+//  sendTravel();
   #endif
 
   //mientras que S1 y S5 no sean igual a linea entonces que se reptia el ciclo
@@ -176,12 +171,8 @@ void comeback() {
     // se comprueba que no hayan obstaculos;
     is_front_free();
     #if DEBUG
-    // se actuaoliza el estatus 
-     if ( millis() - actual_millis_CB > ping_server*3 ){
-       actual_millis_CB = millis();
-      sendTravel();
-      updateState();
-    }
+
+
     #endif
   }
 
