@@ -8,8 +8,6 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266Ping.h>
-
-
 #include <Wire.h>
 
 
@@ -21,11 +19,14 @@
 
 
 #define DEBUG 1
-#define I2CAddressArduino 8
-#define CountData 5 // cantidad de ints a recibir como maxio, si se neceistan mas de 16 
+
+
+#define CountData 6 // cantidad de ints a recibir como maxio, si se neceistan mas de 16 
 // se debe modificar los ciclos de repeticón
 
 
+
+const int16_t I2CArduino= 0x8;
 
 void debug(String val) {
 #if DEBUG
@@ -66,7 +67,7 @@ String paramStatus[] {
 
 //setup del modulo esp_826
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
 
   WiFi.mode(WIFI_OFF);
   delay(1000);
@@ -76,7 +77,9 @@ void setup() {
 
   //Inicalización del la comunicación I2C
   //con los pines D1 y D2 y el canal 8 (modo slave)
-  Wire.begin(D1, D2, I2CAddressArduino);
+  
+  Wire.pins(4,5); 
+  Wire.begin(I2CAddressSlave);
   Wire.onReceive(reciveEvents);
   Wire.onRequest(requestEvents);
 
@@ -85,7 +88,7 @@ void setup() {
   debug(ssid);
   debug("Clave de acceso:");
   debug(password);
-
+  Serial.begin(115200);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
 #if DEBUG
@@ -153,81 +156,130 @@ String app_request(String link) {
 String resultState;
 int httpCodeState = 0;
 String result ;
+bool notified = false;
+char old_state_fs = 0
 // The loop function runs over and over again forever
 void loop() {
+  delay(1500);
 
+  old_state_fs = state_from_server;
+  process_api_request(2, "consulta=0");
+  if (state_from_server != old_state_fs) {
+    sendStatus();
+  }
+  Wire.requestFrom(8, 12);//0x08 = 8;
 
-
-  delay(valuePing * 2.5);
-  //se pide estatus del estado del carrito
-  if (WiFi.status() == WL_CONNECTED) {
-    debug("Conectado a internet");
-    HTTPClient http;
-    //realizar la peticion http
-    http.begin("http://18.188.84.47:3000/state?consulta=0");
-    
-    debug("Realizando get: http://18.188.84.47:3000/state?consulta=0");
-    httpCodeState = http.GET();
-    resultState = "";
-    //Check the returning code
-    if (httpCodeState > 0) {
-      result += http.getString();
-    }
-    debug(result);
-    //close connection
-    http.end();
+  for(int i = 0; i< 6; i++) {
+      Data[i] = Wire.read();
+      Data[i] << 8;
+      Data[i] != Wire.read();
   }
 
-  process_api_request(0, "ubicacion=0&estado=0&angulo=0&distancia=0");
+  package = paramDataLocation[0] + "=" + String(Data[0]);
+  package += "&" + paramDataLocation[1] + "=" + String(Data[1]);
+  package += "&" + paramDataLocation[2] + "=" + String(Data[2]);
+  package += "&" + paramDataLocation[3] + "=" + String(Data[3]);
+  process_api_request(package, 0);
+  package =  paramDataDelivery[0] + "=" + String(Data[4]);
+  package += "&" + paramDataDelivery[1] + "=" + String(Data[5]);
+  process_api_request(package, 1);
+
+
+
+ /*  while (Serial.available() != true){
+    }
+    Serial.read();
+  process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
   delay(1000);
+   while (Serial.available() != true){
+    }
+    Serial.read();
+
+    process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
+  delay(1000);
+   while (Serial.available() != true){
+    }
+    Serial.read();
   process_api_request(1, "peso=150&estado=0");
-  process_api_request(0, "ubicacion=1&estado=1&angulo=0&distancia=0");
+   while (Serial.available() != true){
+    }
+    Serial.read();
+  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=0");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=0&distancia=10");
+   while (Serial.available() != true){
+    }
+    Serial.read();
+  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=10");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=0&distancia=50");
+  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=50");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=0&distancia=100");
+  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=100");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=0&distancia=150");
+    //detecto un bache
+  process_api_request(0, "ubicacion=1&estado=3&angulo=x&distancia=125");
+  delay(1500);
+  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=150");
   delay(500);
   //detecto un bache
-  process_api_request(0, "ubicacion=1&estado=3&angulo=0&distancia=200");
+  process_api_request(0, "ubicacion=1&estado=3&angulo=y&distancia=0");
   delay(1500);
   //se quito el obstaculo
-  process_api_request(0, "ubicacion=1&estado=1&angulo=90&distancia=250");
+  process_api_request(0, "ubicacion=1&estado=1&angulo=y&distancia=40");
   delay(500);
   process_api_request(1, "peso=150&estado=1");
-  process_api_request(0, "ubicacion=2&estado=1&angulo=90&distancia=270");
+  process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=130");
+
+  delay(500); 
+  process_api_request(1, "peso=150&estado=1");
+  process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=150");
   delay(3500);
+  
+
+  
   process_api_request(1, "peso=0&estado=2");
-  process_api_request(0, "ubicacion=1&estado=2&angulo=90&distancia=260");
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=0");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=90&distancia=210");
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=50");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=90&distancia=150");
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=100");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=3&angulo=90&distancia=150");
-  delay(5500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=90&distancia=100");
+  // se detecto un obstaculo
+  process_api_request(0, "ubicacion=1&estado=3&angulo=y&distancia=130");
+  delay(5500);  
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=150");
   delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=90&distancia=50");
+   //se detecto un obstaculo
+  process_api_request(0, "ubicacion=1&estado=3&angulo=x&distancia=0");
+  delay(1500);
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=50");
   delay(500);
-  process_api_request(0, "ubicacion=0&estado=0&angulo=0&distancia=0");
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=100");
+  delay(500);
+  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=150");
+  delay(500);
+  process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
+  
+  while (Serial.available() != true){
+    }
+
+    */
 }
 // funcion que se ejecuta cuanod se solicitan bytes del master (arduino)
 void requestEvents() {
+  Serial.println("requestEvents");
   //se enviará el ping del server al arduino y el estado del carrito
-
-  Wire.write(valuePing);
-  Wire.write(state_from_server);
-
+  Wire.beginTransmission(I2CAddressMaster);
+  Wire.write(200);
+  Wire.write(270);
+  //Wire.write(valuePing);
+  //Wire.write(state_from_server);
+  Wire.endTransmission();
 
 }
 // función que se ejecuta al recibir bytes del master (arduino)
 void reciveEvents(int numBytes) {
   //se recibirán los datos a leer
-
+  Serial.println("reciveEvents");
   if (numBytes > 1) {
     // se lee los bytes recibidos y se añaden a array Data
     for (int i = 0; i < numBytes; i += 2) {
@@ -254,8 +306,8 @@ void reciveEvents(int numBytes) {
     }
     /// se envia a la api
     //process_api_request(package, cRoute);
-    Serial.println(package);
-    Serial.println(route);
+   // Serial.println(package);
+    //Serial.println(route);
 
   }
   else {
@@ -264,4 +316,11 @@ void reciveEvents(int numBytes) {
 
 
   }
+}
+
+
+void sendStatus(){
+  Wire.beginTransmission(8);
+  Wire.write(state_from_server);
+  Wire.endTransmission();
 }
