@@ -47,6 +47,7 @@ aws_utils = {
 // Routes
 const travel = require('./arduino/travel')(app, aws_utils)
 const shipping = require('./arduino/shipping')(app, aws_utils, firebase)
+const device_state = require('./arduino/status')(app)
 const switchEngine = require('./mobile/switch')(app)
 const reporterEngine = require('./mobile/reporter')(app, aws_utils)
 
