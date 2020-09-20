@@ -1,4 +1,3 @@
-
 // ACE2 2S 2020
 // Created by: Leonel Aguilar
 // Adapted by: DamC
@@ -78,11 +77,7 @@ void setup() {
   //Inicalización del la comunicación I2C
   //con los pines D1 y D2 y el canal 8 (modo slave)
   
-  Wire.pins(4,5); 
-  Wire.begin(I2CAddressSlave);
-  Wire.onReceive(reciveEvents);
-  Wire.onRequest(requestEvents);
-
+  Wire.begin(4, 5);
   debug("");
   debug("Iniciando conexion con la red:");
   debug(ssid);
@@ -157,7 +152,9 @@ String resultState;
 int httpCodeState = 0;
 String result ;
 bool notified = false;
-char old_state_fs = 0
+char old_state_fs = 0;
+char high; 
+char low;
 // The loop function runs over and over again forever
 void loop() {
   delay(1500);
@@ -169,20 +166,23 @@ void loop() {
   }
   Wire.requestFrom(8, 12);//0x08 = 8;
 
+  while (Wire.available()<12) {}
   for(int i = 0; i< 6; i++) {
-      Data[i] = Wire.read();
-      Data[i] << 8;
-      Data[i] != Wire.read();
+      low = Wire.read();
+      high = Wire.read();
+      Data[i] = low << 8 | high ;
+
   }
 
   package = paramDataLocation[0] + "=" + String(Data[0]);
   package += "&" + paramDataLocation[1] + "=" + String(Data[1]);
   package += "&" + paramDataLocation[2] + "=" + String(Data[2]);
   package += "&" + paramDataLocation[3] + "=" + String(Data[3]);
-  process_api_request(package, 0);
+  //process_api_request( 0, package);
+
   package =  paramDataDelivery[0] + "=" + String(Data[4]);
   package += "&" + paramDataDelivery[1] + "=" + String(Data[5]);
-  process_api_request(package, 1);
+  //process_api_request( 1,package);
 
 
 
@@ -194,7 +194,6 @@ void loop() {
    while (Serial.available() != true){
     }
     Serial.read();
-
     process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
   delay(1000);
    while (Serial.available() != true){
@@ -228,13 +227,11 @@ void loop() {
   delay(500);
   process_api_request(1, "peso=150&estado=1");
   process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=130");
-
   delay(500); 
   process_api_request(1, "peso=150&estado=1");
   process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=150");
   delay(3500);
   
-
   
   process_api_request(1, "peso=0&estado=2");
   process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=0");
@@ -261,65 +258,13 @@ void loop() {
   
   while (Serial.available() != true){
     }
-
     */
 }
 // funcion que se ejecuta cuanod se solicitan bytes del master (arduino)
-void requestEvents() {
-  Serial.println("requestEvents");
-  //se enviará el ping del server al arduino y el estado del carrito
-  Wire.beginTransmission(I2CAddressMaster);
-  Wire.write(200);
-  Wire.write(270);
-  //Wire.write(valuePing);
-  //Wire.write(state_from_server);
-  Wire.endTransmission();
-
-}
-// función que se ejecuta al recibir bytes del master (arduino)
-void reciveEvents(int numBytes) {
-  //se recibirán los datos a leer
-  Serial.println("reciveEvents");
-  if (numBytes > 1) {
-    // se lee los bytes recibidos y se añaden a array Data
-    for (int i = 0; i < numBytes; i += 2) {
-      //se llenan el array de ints
-      Data[i / 2] = Wire.read();
-      Data[i / 2] << 8;
-      Data[i / 2] |= Wire.read();
-    }
-
-    // se manda a la API cuando se llena el array de data
-    //si arma la cadena con los parametros que determina cRoute
-
-    if (cRoute == reqLocation ) {
-      package = paramDataLocation[0] + "=" + String(Data[0]);
-      package += "&" + paramDataLocation[1] + "=" + String(Data[1]);
-      package += "&" + paramDataLocation[2] + "=" + String(Data[2]);
-      package += "&" + paramDataLocation[3] + "=" + String(Data[3]);
-    } else if (cRoute == reqDelivery ) {
-      package =  paramDataDelivery[0] + "=" + String(Data[0]);
-      package += "&" + paramDataDelivery[1] + "=" + String(Data[1]);
-
-    } else  {
-      debug("error crítico");
-    }
-    /// se envia a la api
-    //process_api_request(package, cRoute);
-   // Serial.println(package);
-    //Serial.println(route);
-
-  }
-  else {
-
-    cRoute = Wire.read();
-
-
-  }
-}
 
 
 void sendStatus(){
+
   Wire.beginTransmission(8);
   Wire.write(state_from_server);
   Wire.endTransmission();

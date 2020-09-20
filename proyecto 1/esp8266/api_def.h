@@ -17,9 +17,8 @@ String state_str = "inactivo";
 // solo agregar un nombre simple y unico, que sera el enviado
 // por el arduino para saber que funcion realizar
 String routes[] = {
-  "traveling",
-  "shipping",
-  "status"
+  "travel",
+  "shipping"
 };
 //variables de posicion: 
 int current_distance = 0;
@@ -80,7 +79,7 @@ void process_api_request(int route, String package) {
   } else {
     debug(String("Ruta identificada ruta almacenada: ") + routes[route]);
     debug("Llamando a la funcion emparejada de la ruta");
-    (*functions[route])(&package);
+    (*functions[routeCheckIndex])(&package);
   }
 }
 
