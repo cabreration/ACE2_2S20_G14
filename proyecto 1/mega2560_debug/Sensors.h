@@ -28,7 +28,6 @@ void read_distance_front() {
   distance_front = (duration * 0.034 / 2 ) * 10;
 }
 
-
 void tareW() {
   sWeight.begin(wgtData, wgtClock);
   sWeight.set_scale();

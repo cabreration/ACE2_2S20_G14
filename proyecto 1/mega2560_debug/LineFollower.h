@@ -3,177 +3,157 @@
 #include "Sensors.h"
 #include <AFMotor.h>
 
-
-
-#define max_speed 150
-#define medium_speed 75
-#define min_speed 50
-
-//variables para el seguidor de linea:
-#define line false // linea blanca = true linea negra = false
+#define max_speed 220
 
 //variables para el uso de motores
-AF_DCMotor motor_R1(1, MOTOR12_1KHZ); //motor derecho frontal
-AF_DCMotor motor_R2(4, MOTOR12_1KHZ); //motor derecho trasero
-AF_DCMotor motor_L1(2, MOTOR12_1KHZ); //motor izquierdo frontal
-AF_DCMotor motor_L2(3, MOTOR12_1KHZ); //motor izquierdo trasero
+AF_DCMotor motor_L1(1, MOTOR12_8KHZ); //motor IZQUIERDA FRONTAL
+AF_DCMotor motor_R1(4, MOTOR34_8KHZ); //motor DERECHA FRONTAL
+AF_DCMotor motor_L2(2, MOTOR12_8KHZ); //motor IZQUIERDO TRASERO
+AF_DCMotor motor_R2(3, MOTOR34_8KHZ);   //motor DERECHA TRASERA
 
+// #1 -> FRONTAL
+// #2 -> TRASERO
+//motor 4 es adelante derecha
+//motor 3 es atras derecha
+//motor 2 es atras izquierda
+//motor 1 es adelante izquierda
 
-//verifica si hay algún obstaculo
-is_front_free(){
-  int actualMillis = millis();
-  read_distance_front();
-    if (distance_front < 5 ){
-      #if DEBUG
-       travel_array[1] = 3;
-  //    sendTravel();
-      #endif
-        while(distance_front < 50 ){
-          #if DEBUG
-        
-           #endif
-          read_distance_front();
-        }
-        #if DEBUG
-        travel_array[1] = 1;
- //       sendTravel();
-        #endif 
-    }
-}
+#define R1F FORWARD
+#define R2F FORWARD
+#define L1F FORWARD
+#define L2F BACKWARD
 
-
-
-
-
+#define R1B BACKWARD
+#define R2B BACKWARD
+#define L1B BACKWARD
+#define L2B FORWARD
 
 void stop_motors() {
-  motor_R1.run(RELEASE); 
+  motor_R1.run(RELEASE);
   motor_R2.run(RELEASE);
   motor_L1.run(RELEASE);
-  motor_L2.run(RELEASE); 
-  }
+  motor_L2.run(RELEASE);
+}
 
+void forward() {
+  motor_R1.setSpeed(max_speed);
+  motor_R2.setSpeed(max_speed);
+  motor_L1.setSpeed(max_speed);
+  motor_L2.setSpeed(max_speed);
+
+  motor_R1.run(R1F);
+  motor_R2.run(R2F);
+  motor_L1.run(L1F);
+  motor_L2.run(L2F);
+}
+
+void go_right() {
+  Serial.println("Moviendo hacia derecha");
+  stop_motors();
+  delay(100);
+
+  motor_R1.run(R1B);
+  motor_R2.run(R2B);
+  motor_L1.run(L1F);
+  motor_L2.run(L2F);
+}
+
+void go_left() {
+  Serial.println("Moviendo hacia izquierda");
+  stop_motors();
+  delay(100);
+
+  motor_R1.run(R1F);
+  motor_R2.run(R2F);
+  motor_L1.run(L1B);
+  motor_L2.run(L2B);
+}
+
+void rotate_to_line() {
+  Serial.println("Buscando linea negra...");
+  go_right();
+  while (!(digitalRead(sensorRight) && digitalRead(sensorLeft))) {
+    delay(2);
+  }
+  forward();
+  stop_motors();
+}
+
+//verifica si hay algún obstaculo
+is_front_free() {
+  read_distance_front();
+  if (distance_front < 50 ) {
+    stop_motors();
+    Serial.println("Hay un objeto en frente...");
+#if DEBUG
+    travel_array[1] = 3;
+    //    sendTravel();
+#endif
+    while (distance_front < 50 ) {
+      read_distance_front();
+      delay(10);
+    }
+    Serial.println("Objeto removido.");
+    forward();
+#if DEBUG
+    travel_array[1] = 1;
+    //       sendTravel();
+#endif
+  }
+}
 
 // funcion que dirige para ir al punto de entrega
-void shipping() {
+void follow_line() {
 
-  motor_R1.setSpeed(max_speed);
-  motor_R2.setSpeed(max_speed);
-  motor_L1.setSpeed(max_speed);
-  motor_L2.setSpeed(max_speed);
+  if (digitalRead(sensorLeft) || digitalRead(sensorRight)) {
+    forward();
 
-#if DEBUG 
-  // se indica que se encuentra en el recorido
-  travel_array[0] = 1; 
-  // se indica el estado= en camino a enttravel1] = 1;
-  travel_array[1] = 1;
-  // se manda el nuevo status
-//  sendTravel();
-#endif
-  //mientras que S1 y S5 no sean igual a linea entonces que se reptia el ciclo
-  //se puede usar el sensor de baches tambien
-  while (digitalRead(sensorLeft) != line ||
-         digitalRead(sensorRight) != line)
-  {     
-    //si el sensor  derecho detecta linea 
-    //se gira para la derecha
-    if (digitalRead(sensorRight) == line ) {
-      motor_R1.run(BACKWARD); 
-      motor_R2.run(BACKWARD);
-      motor_R1.setSpeed(min_speed);
-      motor_R2.setSpeed(min_speed);
-      while(sensorRight == line) {}
-      motor_R1.run(FORWARD); 
-      motor_R2.run(FORWARD);
-      motor_R2.setSpeed(max_speed);
-      motor_R2.setSpeed(max_speed);
-    }
-
-    //si el sensor interno izquierdo detecta linea
-    if (digitalRead(sensorRight) == line  ) {
-      motor_L1.run(BACKWARD); 
-      motor_L2.run(BACKWARD);
-      motor_L1.setSpeed(min_speed);
-      motor_L2.setSpeed(min_speed);
-      while(sensorRight == line) {}
-      motor_L1.run(FORWARD); 
-      motor_L2.run(FORWARD);
-      motor_L2.setSpeed(max_speed);
-      motor_L2.setSpeed(max_speed);
-    }
-
-   
-    // se comprueba que no hayan obstaculos;
-    is_front_free();
-    #if DEBUG
-    // se actualiza el estatus actual de todo
-    if ( millis() - actual_millis_SP > ping_server*3 ){
-      actual_millis_SP = millis();
-    //  sendTravel();
-    //  updateState();
-    }
-  #endif
-  } 
-}
-// funcion para regresar al punto de origen
-void comeback() {
-  motor_R1.run(FORWARD); 
-  motor_R2.run(FORWARD);
-  motor_L1.run(FORWARD); 
-  motor_L2.run(FORWARD);
-  motor_R1.setSpeed(max_speed);
-  motor_R2.setSpeed(max_speed);
-  motor_L1.setSpeed(max_speed);
-  motor_L2.setSpeed(max_speed);
-
-  #if DEBUG
-  // se indica que se encuentra en el recorido
-  travel_array[0] = 1; 
-  // se indica el estado= en camino a enttravel1] = 1;
-  travel_array[1] = 2;
-  // se manda el nuevo status
-//  sendTravel();
-  #endif
-
-  //mientras que S1 y S5 no sean igual a linea entonces que se reptia el ciclo
-  //se puede usar el sensor de baches tambien
-  while (digitalRead(sensorLeft) != line ||
-         digitalRead(sensorRight) != line)
-  { 
-    //si el sensor  derecho detecta linea 
-    //se gira para la derecha
-    if (digitalRead(sensorRight) == line ) {
-      motor_R1.run(BACKWARD); 
-      motor_R2.run(BACKWARD);
-      motor_R1.setSpeed(min_speed);
-      motor_R2.setSpeed(min_speed);
-      while(sensorRight == line) {}
-      motor_R1.run(FORWARD); 
-      motor_R2.run(FORWARD);
-      motor_R2.setSpeed(max_speed);
-      motor_R2.setSpeed(max_speed);
-    }
-
-    //si el sensor interno izquierdo detecta linea
-    if (digitalRead(sensorLeft) == line  ) {
-      motor_L1.run(BACKWARD); 
-      motor_L2.run(BACKWARD);
-      motor_L1.setSpeed(min_speed);
-      motor_L2.setSpeed(min_speed);
-      while(sensorRight == line) {}
-      motor_L1.run(FORWARD); 
-      motor_L2.run(FORWARD);
-      motor_L2.setSpeed(max_speed);
-      motor_L2.setSpeed(max_speed);
-    }
-
-    
-    // se comprueba que no hayan obstaculos;
-    is_front_free();
-    #if DEBUG
-
-
-    #endif
+    Serial.println("Iniciando movimiento...");
+  }
+  else {
+    Serial.println("Por favor ponga el carrito en su lugar");
+    rotate_to_line();
   }
 
+  while (digitalRead(sensorLeft) || digitalRead(sensorRight))
+  {
+    //si el sensor  derecho detecta linea
+    //se gira para la derecha
+    if (digitalRead(sensorRight) && !digitalRead(sensorLeft) ) {
+      go_right();
+
+      //Serial.println("Volteando a la derecha");
+      while (!digitalRead(sensorLeft)) {
+        delay(10);
+        /**/
+        if (!digitalRead(sensorLeft) && !digitalRead(sensorRight)){
+          break;
+        }
+      }
+      forward();
+    }
+
+    //si el sensor interno izquierdo detecta linea
+    else if (digitalRead(sensorLeft) && !digitalRead(sensorRight)) {
+      go_left();
+
+      //Serial.println("Volteando a la izquierda");
+      while (!digitalRead(sensorRight)) {
+        delay(10);
+        /**/
+        
+        if (!digitalRead(sensorLeft) && !digitalRead(sensorRight)){
+          break;
+        }
+      }
+
+      forward();
+    }
+    else {
+      is_front_free();
+    }
+  }
+
+  rotate_to_line();
+  stop_motors();
 }

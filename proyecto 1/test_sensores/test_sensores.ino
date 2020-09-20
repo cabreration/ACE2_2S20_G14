@@ -4,7 +4,7 @@
 
 //variables para la lectura de peso:
 HX711 sWeight;
-float calibration = 20280.0; //factor de calibración para el sensor
+float calibration = 30000; //20280.0; //factor de calibración para el sensor
 long zeroFactor = 0;
 int weight = 0;
 #define weight_umbral 150
@@ -46,15 +46,14 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  read_weight();
-  Serial.println("peso leido" + String(weight));
+ 
   read_distance_front();
-  Serial.println("distancia leida: " + String(distance_front));
-  Serial.println("S1: "+ String(digitalRead(lineFollower_S1_RO)));
-  Serial.println("S2: "+ String(digitalRead(lineFollower_S2_RI))); 
-  Serial.println("S3: "+ String(digitalRead(lineFollower_S3_C))) ;
-  Serial.println("S4: "+ String(digitalRead(lineFollower_S4_LI)));
-  Serial.println("S5: "+ String(digitalRead(lineFollower_S5_LO)));
-  
+  read_weight();
+  Serial.println("*******************************");
+  Serial.println("Peso: " + String(weight)); 
+  Serial.println("Distancia: " + String(distance_front));
+  Serial.println("Izquierda: " + String(digitalRead(A9)));
+  Serial.println("Derecha: " + String(digitalRead(19)));
+
+  delay(1000);
 }

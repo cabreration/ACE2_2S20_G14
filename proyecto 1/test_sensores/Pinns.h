@@ -13,8 +13,6 @@
 #define lineFollower_Bump  39
 #define lineFollower_Near  37 //blanco
 
-blanco, gris, morado, azul, verde, amarillo naranja, rojo, gris
-
 //pines digitales para el sensor de peso: 
 
 //pines digitales para el sensor de peso
@@ -46,8 +44,10 @@ void setup_arduino () {
   pinMode(lineFollower_S3_C,INPUT);
   pinMode(lineFollower_S4_LI, INPUT);
   pinMode(lineFollower_S5_LO, INPUT); 
-  pinMode(lineFollower_Bump, INPUT); 
-  pinMode(lineFollower_Near, INPUT);  
+  pinMode(A9, INPUT); 
+  pinMode(19, INPUT);
+ // pinMode(lineFollower_Bump, INPUT); 
+ // pinMode(lineFollower_Near, INPUT);  
 
   //Inicializacion de pines para el led de estado
   pinMode(led_line, OUTPUT);
