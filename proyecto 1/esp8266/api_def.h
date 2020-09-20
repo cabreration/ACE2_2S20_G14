@@ -4,8 +4,6 @@
 #ifndef API_DEF
 #define API_DEF
 
-
-
 // En este archivo se deben escribir todas
 // las funciones con cada ruta que se consumira de la API
 
@@ -16,10 +14,12 @@ String state_str = "inactivo";
 // Definir todas las rutas a consumir en la api en este arreglo
 // solo agregar un nombre simple y unico, que sera el enviado
 // por el arduino para saber que funcion realizar
-String routes[] = {
-  "travel",
-  "shipping"
+String routes[3] = {
+  "traveling",
+  "shipping",
+  "status"
 };
+
 //variables de posicion: 
 int current_distance = 0;
 int current_angle = 0; 
@@ -46,6 +46,7 @@ void sendShipping(String* package) {
 
 void sendStatus(String* package) {
   debug("Realizanod petición [sendStatus]"); 
+
   String state_str = app_request(routes[2] + "?" + *package);
   state_str.trim();
   if ( state_str == "activo") {
@@ -67,9 +68,6 @@ void (*functions[routeCount]) (String *) = {
   sendStatus
 };
 
-
-int routeCheckIndex = 0;
-
 // Procesar una llamada hacia la API
 void process_api_request(int route, String package) {
   debug(String("Encontrando la ruta: ") + route);
@@ -79,7 +77,7 @@ void process_api_request(int route, String package) {
   } else {
     debug(String("Ruta identificada ruta almacenada: ") + routes[route]);
     debug("Llamando a la funcion emparejada de la ruta");
-    (*functions[routeCheckIndex])(&package);
+    (*functions[route])(&package);
   }
 }
 

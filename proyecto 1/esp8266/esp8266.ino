@@ -9,21 +9,13 @@
 //#include <ESP8266Ping.h>
 #include <Wire.h>
 
-
 //posibles peticiones
 #define reqLocation 0 // location?ubicacion=0&
 #define reqDelivery 1 // delivery?peso=200&estado=0;
-
-
-
-
-#define DEBUG 1
-
+#define DEBUG 1       // 
 
 #define CountData 6 // cantidad de ints a recibir como maxio, si se neceistan mas de 16 
 // se debe modificar los ciclos de repeticón
-
-
 
 const int16_t I2CArduino= 0x8;
 
@@ -46,8 +38,6 @@ int Data[CountData];
 int valuePing = 120;
 char state_from_server = 0; // 0 desactivado // 1 activado
 bool state = 0; //apagado
-
-
 
 String paramDataLocation[] = {
   "ubicacion",
@@ -161,12 +151,16 @@ void loop() {
 
   old_state_fs = state_from_server;
   process_api_request(2, "consulta=0");
+  
   if (state_from_server != old_state_fs) {
     sendStatus();
   }
   Wire.requestFrom(8, 12);//0x08 = 8;
 
+  Serial.println("Esperando datos");
   while (Wire.available()<12) {}
+  Serial.println("Recibido :v");
+  
   for(int i = 0; i< 6; i++) {
       low = Wire.read();
       high = Wire.read();
@@ -183,88 +177,10 @@ void loop() {
   package =  paramDataDelivery[0] + "=" + String(Data[4]);
   package += "&" + paramDataDelivery[1] + "=" + String(Data[5]);
   process_api_request( 1,package);
-
-
-
- /*  while (Serial.available() != true){
-    }
-    Serial.read();
-  process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
-  delay(1000);
-   while (Serial.available() != true){
-    }
-    Serial.read();
-    process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
-  delay(1000);
-   while (Serial.available() != true){
-    }
-    Serial.read();
-  process_api_request(1, "peso=150&estado=0");
-   while (Serial.available() != true){
-    }
-    Serial.read();
-  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=0");
-  delay(500);
-   while (Serial.available() != true){
-    }
-    Serial.read();
-  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=10");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=50");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=100");
-  delay(500);
-    //detecto un bache
-  process_api_request(0, "ubicacion=1&estado=3&angulo=x&distancia=125");
-  delay(1500);
-  process_api_request(0, "ubicacion=1&estado=1&angulo=x&distancia=150");
-  delay(500);
-  //detecto un bache
-  process_api_request(0, "ubicacion=1&estado=3&angulo=y&distancia=0");
-  delay(1500);
-  //se quito el obstaculo
-  process_api_request(0, "ubicacion=1&estado=1&angulo=y&distancia=40");
-  delay(500);
-  process_api_request(1, "peso=150&estado=1");
-  process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=130");
-  delay(500); 
-  process_api_request(1, "peso=150&estado=1");
-  process_api_request(0, "ubicacion=2&estado=1&angulo=y&distancia=150");
-  delay(3500);
-  
-  
-  process_api_request(1, "peso=0&estado=2");
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=0");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=50");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=100");
-  delay(500);
-  // se detecto un obstaculo
-  process_api_request(0, "ubicacion=1&estado=3&angulo=y&distancia=130");
-  delay(5500);  
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=150");
-  delay(500);
-   //se detecto un obstaculo
-  process_api_request(0, "ubicacion=1&estado=3&angulo=x&distancia=0");
-  delay(1500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=50");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=100");
-  delay(500);
-  process_api_request(0, "ubicacion=1&estado=2&angulo=y&distancia=150");
-  delay(500);
-  process_api_request(0, "ubicacion=0&estado=0&angulo=x&distancia=0");
-  
-  while (Serial.available() != true){
-    }
-    */
 }
+
 // funcion que se ejecuta cuanod se solicitan bytes del master (arduino)
-
-
 void sendStatus(){
-
   Wire.beginTransmission(8);
   Wire.write(state_from_server);
   Wire.endTransmission();

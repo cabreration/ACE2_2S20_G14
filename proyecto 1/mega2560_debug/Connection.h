@@ -4,9 +4,7 @@
 #if DEBUG
 
 //variables para la transmision de datos;
-int travel_array[4] = {
-  0, 0, 0, 0
-};
+int travel_array[4] = { 0, 0, 0, 0 };
 
 int delivery_array[2] = {0, 0};
 
@@ -29,14 +27,16 @@ void sendEvent(int count) {
   Wire.write(lowByte(delivery_array[0]));
   Wire.write(highByte(delivery_array[0]));
   Wire.write(lowByte(delivery_array[1]));
-
 }
+
 // funcion que pide el estatus del server y el ping
 // primeros 2 bytes = ping
 // suguientes 2 bytes = status del server
 void receiveEvent (int count) {
+  Serial.println("Recibiendo");
   while (!Wire.available()) {}
 
+  Serial.println("Recibido");
   state_from_server = Wire.read();
 }
 #endif

@@ -7,7 +7,4 @@ void setup_arduino () {
 
   pinMode(sensorLeft,INPUT);
   pinMode(sensorRight, INPUT); 
-
-  //Inicializacion de pines para el led de estado
-  pinMode(led_line, OUTPUT);  
 }
