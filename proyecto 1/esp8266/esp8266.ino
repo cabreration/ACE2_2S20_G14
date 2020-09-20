@@ -6,7 +6,7 @@
 #include <WiFiClientSecure.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
-#include <ESP8266Ping.h>
+//#include <ESP8266Ping.h>
 #include <Wire.h>
 
 
@@ -33,8 +33,8 @@ void debug(String val) {
 #endif
 }
 
-const char *ssid = "Red1";
-const char *password = "Luch0Luch0";
+const char *ssid = "TIGO-5248";
+const char *password = "2D9657312043";
 const char *host = "http://18.188.84.47:3000/";
 
 String route;
@@ -178,11 +178,11 @@ void loop() {
   package += "&" + paramDataLocation[1] + "=" + String(Data[1]);
   package += "&" + paramDataLocation[2] + "=" + String(Data[2]);
   package += "&" + paramDataLocation[3] + "=" + String(Data[3]);
-  //process_api_request( 0, package);
+  process_api_request( 0, package);
 
   package =  paramDataDelivery[0] + "=" + String(Data[4]);
   package += "&" + paramDataDelivery[1] + "=" + String(Data[5]);
-  //process_api_request( 1,package);
+  process_api_request( 1,package);
 
 
 
