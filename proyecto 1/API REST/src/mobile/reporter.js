@@ -58,12 +58,12 @@ module.exports = (app, aws_utils) => {
         
         setTimeout(() => {
             response = {
-                obstacles: common.obstacles.toString(),
+                obstacles: common.obstacles.toFixed(2).toString(),
                 state: common.state,
-                avg_go: common.avg_go.toString(),
-                avg_come: common.avg_come.toString(),
+                avg_go: common.avg_go.toFixed(2).toString(),
+                avg_come: common.avg_come.toFixed(2).toString(),
                 total_obstacles: common.total_obstacles.toString(),
-                avg_weight: common.avg_weight.toString(),
+                avg_weight: common.avg_weight.toFixed(2).toString(),
                 total_delivered: common.total_delivered.toString(),
                 x_axis: common.x_axis.toString(),
                 y_axis: common.y_axis.toString()

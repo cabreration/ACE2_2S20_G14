@@ -3,7 +3,7 @@ let common = require('../arduino/common')
 module.exports = (app) => {
     app.post('/switch', (req, res) => {
         let state = req.body.Estado
-        if (state == 0) {
+        if (state == 'i') {
             common.state = 'inactivo'
         }
         else {
