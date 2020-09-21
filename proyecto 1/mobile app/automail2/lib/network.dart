@@ -50,7 +50,7 @@ Future<Map> peticiones() async {
 Future<Map> CambiarEstado(bool estado) async {
   try {
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({"estado": estado ? "i" : "a"});
+    final body = jsonEncode({"Estado": estado ? "i" : "a"});
 
     var response = await http.post('http://18.188.84.47:3000/switch',
         headers: headers, body: body);
