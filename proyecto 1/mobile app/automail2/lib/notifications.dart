@@ -39,9 +39,11 @@ class NotificationProvider {
   }
 
   obtenerMensaje() {
+    String notificacion="";
     mensajes.listen((mensaje) {
-      return mensaje;
+      notificacion = mensaje;
     });
+    return notificacion;
   }
 
   dispose() {
