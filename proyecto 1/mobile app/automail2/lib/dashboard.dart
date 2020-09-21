@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'network.dart';
 import 'notifications.dart';
@@ -13,11 +13,13 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final notifications = new NotificationProvider();
-    String mensaje = notifications.obtenerMensaje();
-
-    const seconds = const Duration(seconds: 5);
-    Timer.periodic(seconds,
-        (Timer t) => peticiones().then((value) => print("----------------------------------------------")));
+    notifications.mensajes.listen((data) {
+      mensaje = data.replaceAll("\"", "");
+      setState(() {});
+    });
+    const seconds = const Duration(seconds: 30);
+    Timer.periodic(
+        seconds, (Timer t) => peticiones().then((value) => setState(() {})));
 
     return Scaffold(
       appBar: AppBar(
@@ -31,18 +33,19 @@ class _DashboardState extends State<Dashboard> {
           crossAxisCount: 2,
           padding: EdgeInsets.all(3.0),
           children: <Widget>[
-            makeDashboardItem("Peso promedio", "0.0", Icons.dehaze,
-                Color.fromRGBO(153, 51, 255, 1)),
-            makeDashboardItem("Obstaculos detectados", "0", Icons.call_split,
-                Color.fromRGBO(255, 51, 153, 1)),
-            makeDashboardItem("Tiempo regreso promedio", "0",
+            makeDashboardItem("Peso promedio", data["avg_weight"].toString(),
+                Icons.dehaze, Color.fromRGBO(153, 51, 255, 1)),
+            makeDashboardItem("Obstaculos detectados", data["total_obstacles"],
+                Icons.call_split, Color.fromRGBO(255, 51, 153, 1)),
+            makeDashboardItem("Tiempo regreso promedio", data["avg_come"],
                 Icons.hourglass_full, Color.fromRGBO(0, 102, 204, 1)),
-            makeDashboardItem("Tiempo entrega promedio", "0",
+            makeDashboardItem("Tiempo entrega promedio", data["avg_go"],
                 Icons.hourglass_empty, Color.fromRGBO(128, 128, 128, 1)),
-            makeDashboardItem("Paquetes entregados", "0", Icons.redeem,
-                Color.fromRGBO(0, 204, 204, 1)),
+            makeDashboardItem("Paquetes entregados", data["total_delivered"],
+                Icons.redeem, Color.fromRGBO(0, 204, 204, 1)),
             makeDashboardItemState(),
-            makeDashboardItemCanvas(_posX, _posY),
+            makeDashboardItemCanvas(
+                double.parse(data["x_axis"]), double.parse(data["x_axis"])),
             makeDashboardItemnNotficacion(
                 "Notificaciones", mensaje, Colors.orange),
           ],
@@ -55,7 +58,6 @@ class _DashboardState extends State<Dashboard> {
   Color _colorActive = Color.fromRGBO(76, 153, 0, 1);
   String _activeInactiveState = "Activo";
   bool _stateState = false;
-
   Card makeDashboardItemState() {
     return Card(
         elevation: 1.0,
@@ -72,7 +74,9 @@ class _DashboardState extends State<Dashboard> {
                 _colorActive = Color.fromRGBO(76, 153, 0, 1);
                 _activeInactiveState = "Activo";
               }
-              _posY++;
+
+              CambiarEstado(_stateState);
+
               setState(() {});
             },
             child: Column(
@@ -148,6 +152,7 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
+  String mensaje = "";
   Card makeDashboardItemnNotficacion(
       String title, String textItem, Color color) {
     return Card(
@@ -156,7 +161,10 @@ class _DashboardState extends State<Dashboard> {
         child: Container(
           decoration: BoxDecoration(color: color),
           child: new InkWell(
-            onTap: () {},
+            onTap: () {
+              mensaje = "";
+              setState(() {});
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -169,7 +177,7 @@ class _DashboardState extends State<Dashboard> {
                       style:
                           new TextStyle(fontSize: 14.0, color: Colors.white)),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 30.0),
                 new Center(
                   child: new Text(textItem,
                       textAlign: TextAlign.center,
@@ -182,9 +190,9 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
-  double _posX = 19;
-  double _posY = 20;
   Card makeDashboardItemCanvas(double posX, double posY) {
+    double _posX = 19 + (posX * 0.2667);
+    double _posY = 20 + (posY * 0.994);
     return Card(
       elevation: 1.0,
       margin: new EdgeInsets.all(8.0),
@@ -193,7 +201,7 @@ class _DashboardState extends State<Dashboard> {
         width: double.infinity,
         height: double.infinity,
         color: Colors.yellow,
-        child: CustomPaint(painter: FaceOutlinePainter(posX, posY)),
+        child: CustomPaint(painter: FaceOutlinePainter(_posX, _posY)),
       ),
     );
   }
@@ -276,9 +284,6 @@ class FaceOutlinePainter extends CustomPainter {
     // Mouth
     final mouthPoint = Path();
     mouthPoint.addOval(Rect.fromLTWH(_posX, _posY, 2, 2));
-    print("---------------");
-    print(_posX);
-    print("---------------");
 
     canvas.drawPath(mouthPoint, paintWhite);
   }

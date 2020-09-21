@@ -39,11 +39,11 @@ class NotificationProvider {
   }
 
   obtenerMensaje() {
+    String notificacion="";
     mensajes.listen((mensaje) {
-      print("1234567890------------------------------------");
-      return mensaje;
+      notificacion = mensaje;
     });
-    return "hola mundo";
+    return notificacion;
   }
 
   dispose() {
