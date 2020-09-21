@@ -1,0 +1,16 @@
+let common = require('../arduino/common')
+
+module.exports = (app) => {
+    app.post('/switch', (req, res) => {
+        let state = req.body.Estado
+        if (state == 'i') {
+            common.state = 'inactivo'
+        }
+        else {
+            common.state = 'activo'
+        }
+
+        console.log(common.state);
+        res.send('copy that')
+    })
+}
