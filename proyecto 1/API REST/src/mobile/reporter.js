@@ -58,12 +58,21 @@ module.exports = (app, aws_utils) => {
         
         setTimeout(() => {
             response = {
+<<<<<<< Updated upstream
                 obstacles: common.obstacles.toFixed(2).toString(),
                 state: common.state,
                 avg_go: common.avg_go.toFixed(2).toString(),
                 avg_come: common.avg_come.toFixed(2).toString(),
                 total_obstacles: common.total_obstacles.toString(),
                 avg_weight: common.avg_weight.toFixed(2).toString(),
+=======
+                obstacles: common.obstacles.toString(),
+                state: common.obstacles.state,
+                avg_go: (Math.round(common.avg_go * 100) / 100).toString(),
+                avg_come: (Math.round(common.avg_come * 100) / 100).toString(),
+                total_obstacles: common.total_obstacles.toString(),
+                avg_weight: (Math.round(common.avg_weight * 100) / 100).toString(),
+>>>>>>> Stashed changes
                 total_delivered: common.total_delivered.toString(),
                 x_axis: common.x_axis.toString(),
                 y_axis: common.y_axis.toString()

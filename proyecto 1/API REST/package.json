@@ -4,7 +4,8 @@
   "description": "auto-mail api rest",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
   "author": "Javier Cabrera",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.1.0",
     "morgan": "^1.10.0"
+  },
+  "engines": {
+    "node": ">=0.12"
   }
 }
