@@ -17,7 +17,7 @@
 #define CountData 6 // cantidad de ints a recibir como maxio, si se neceistan mas de 16 
 // se debe modificar los ciclos de repeticón
 
-const int16_t I2CArduino= 0x8;
+const int16_t I2CArduino = 0x8;
 
 void debug(String val) {
 #if DEBUG
@@ -32,7 +32,18 @@ const char *host = "http://18.188.84.47:3000/";
 String route;
 char cRoute;
 String package;
-int Data[CountData];
+int traveling_array[4];
+int old_traveling[4] =  {
+  0,
+  0,
+  0,
+  0
+};
+
+int shipping_array[2];
+int old_shipping[2] = {
+  0, 0
+};
 //cantidad de ping en ese instante:
 
 int valuePing = 120;
@@ -53,37 +64,8 @@ String paramDataDelivery[] = {
 String paramStatus[] {
   "consulta"
 };
-
 //setup del modulo esp_826
-void setup() {
-  //Serial.begin(115200);
 
-  WiFi.mode(WIFI_OFF);
-  delay(1000);
-  WiFi.mode(WIFI_STA);
-
-  WiFi.begin(ssid, password);
-
-  //Inicalización del la comunicación I2C
-  //con los pines D1 y D2 y el canal 8 (modo slave)
-  
-  Wire.begin(4, 5);
-  debug("");
-  debug("Iniciando conexion con la red:");
-  debug(ssid);
-  debug("Clave de acceso:");
-  debug(password);
-  Serial.begin(115200);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-#if DEBUG
-    Serial.print(".");
-#endif
-  }
-
-  debug("");
-  debug("Conectado exitosamente a la red.");
-}
 
 //Esperar a que el serial este disponible
 void waitSerial() {
@@ -138,49 +120,127 @@ String app_request(String link) {
 }
 
 #include "api_def.h";
+
+void setup() {
+  //Serial.begin(115200);
+
+  WiFi.mode(WIFI_OFF);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+
+  WiFi.begin(ssid, password);
+
+  //Inicalización del la comunicación I2C
+  //con los pines D1 y D2 y el canal 8 (modo slave)
+
+  Wire.begin(4, 5);
+  debug("");
+  debug("Iniciando conexion con la red:");
+  debug(ssid);
+  debug("Clave de acceso:");
+  debug(password);
+  Serial.begin(115200);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+#if DEBUG
+    Serial.print(".");
+#endif
+  }
+
+  debug("");
+  debug("Conectado exitosamente a la red.");
+  process_api_request(2, "consulta=1");
+}
+
+
+
+
 String resultState;
 int httpCodeState = 0;
 String result ;
 bool notified = false;
 char old_state_fs = 0;
-char high; 
+char high;
 char low;
+
+bool equalTravel() {
+  for ( int i = 0; i < 4; i++) {
+    if (old_traveling[i] != traveling_array[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool equalShipping () {
+  for (int i = 0; i < 2; i++)  {
+    if (old_shipping[i] != shipping_array[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
 // The loop function runs over and over again forever
 void loop() {
   delay(1500);
 
-  old_state_fs = state_from_server;
-  process_api_request(2, "consulta=0");
-  
-  if (state_from_server != old_state_fs) {
-    sendStatus();
-  }
+
+
+
   Wire.requestFrom(8, 12);//0x08 = 8;
 
   Serial.println("Esperando datos");
-  while (Wire.available()<12) {}
+  while (Wire.available() < 12) {}
   Serial.println("Recibido :v");
-  
-  for(int i = 0; i< 6; i++) {
-      low = Wire.read();
-      high = Wire.read();
-      Data[i] = low << 8 | high ;
+
+  for (int i = 0; i < 4; i++) {
+    low = Wire.read();
+    high = Wire.read();
+    traveling_array[i] = low << 8 | high ;
+  }
+  for (int i = 0; i < 2; i++) {
+    low = Wire.read();
+    high = Wire.read();
+    shipping_array[i] = low << 8 | high ;
+  }
+
+  if (!equalTravel()) {
+    package = paramDataLocation[0] + "=" + String(traveling_array[0]);
+    package += "&" + paramDataLocation[1] + "=" + String(traveling_array[1]);
+    package += "&" + paramDataLocation[2] + "=" + String(traveling_array[2]);
+    package += "&" + paramDataLocation[3] + "=" + String(traveling_array[3]);
+    process_api_request( 0, package);
+    for (int j = 0; j < 4; j++)  {
+      old_traveling[j] = traveling_array[j];
+    }
+    //old_traveling = traveling_array;
+  }
+  if (!equalShipping()) {
+    package =  paramDataDelivery[0] + "=" + String(shipping_array[4]);
+    package += "&" + paramDataDelivery[1] + "=" + String(shipping_array[5]);
+    process_api_request( 1, package);
+    for (int j = 0; j < 2; j ++ ) {
+      old_traveling[j] = shipping_array[j];
+    }
+    // old_shipping = shipping_array;
+  }
+
+  if (traveling_array[0] == 0) {
+    process_api_request(2, "consulta=0");
+
+    if (state_from_server != old_state_fs) {
+      sendStatus();
+      old_state_fs = state_from_server; 
+    }
 
   }
 
-  package = paramDataLocation[0] + "=" + String(Data[0]);
-  package += "&" + paramDataLocation[1] + "=" + String(Data[1]);
-  package += "&" + paramDataLocation[2] + "=" + String(Data[2]);
-  package += "&" + paramDataLocation[3] + "=" + String(Data[3]);
-  process_api_request( 0, package);
-
-  package =  paramDataDelivery[0] + "=" + String(Data[4]);
-  package += "&" + paramDataDelivery[1] + "=" + String(Data[5]);
-  process_api_request( 1,package);
 }
 
 // funcion que se ejecuta cuanod se solicitan bytes del master (arduino)
-void sendStatus(){
+void sendStatus() {
   Wire.beginTransmission(8);
   Wire.write(state_from_server);
   Wire.endTransmission();
