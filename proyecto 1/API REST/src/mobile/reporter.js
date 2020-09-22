@@ -58,7 +58,7 @@ module.exports = (app, aws_utils) => {
         
         setTimeout(() => {
             response = {
-                obstacles: common.obstacles.toFixed(2).toString(),
+                obstacles: common.obstacles.toString(),
                 state: common.state,
                 avg_go: common.avg_go.toFixed(2).toString(),
                 avg_come: common.avg_come.toFixed(2).toString(),
