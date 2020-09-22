@@ -3,13 +3,14 @@
 #include "Sensors.h"
 #include <AFMotor.h>
 
-#define max_speed 220
+#define max_speed 255
 
 //variables para el uso de motores
-AF_DCMotor motor_L1(1, MOTOR12_8KHZ); //motor IZQUIERDA FRONTAL
-AF_DCMotor motor_R1(4, MOTOR34_8KHZ); //motor DERECHA FRONTAL
-AF_DCMotor motor_L2(2, MOTOR12_8KHZ); //motor IZQUIERDO TRASERO
-AF_DCMotor motor_R2(3, MOTOR34_8KHZ);   //motor DERECHA TRASERA
+
+AF_DCMotor motor_L1(1, MOTOR12_64KHZ); //motor IZQUIERDA FRONTAL
+AF_DCMotor motor_R1(4, MOTOR34_64KHZ); //motor DERECHA FRONTAL
+AF_DCMotor motor_L2(2, MOTOR12_64KHZ); //motor IZQUIERDO TRASERO
+AF_DCMotor motor_R2(3, MOTOR34_64KHZ); //motor DERECHA TRASERA
 
 // #1 -> FRONTAL
 // #2 -> TRASERO
@@ -73,6 +74,8 @@ void rotate_to_line() {
   Serial.println("Buscando linea negra...");
   go_right();
   while (!(digitalRead(sensorRight) && digitalRead(sensorLeft))) {
+    Serial.println("L: " + String(digitalRead(sensorLeft)));
+    Serial.println("R: " + String(digitalRead(sensorRight)));
     delay(2);
   }
   forward();
@@ -82,15 +85,17 @@ void rotate_to_line() {
 //verifica si hay algún obstaculo
 is_front_free() {
   read_distance_front();
-  if (distance_front < 50 ) {
+  if (distance_front < 70 ) {
     stop_motors();
     Serial.println("Hay un objeto en frente...");
 #if DEBUG
     travel_array[1] = 3;
 #endif
 
-    while (distance_front < 50 ) {
+    while (distance_front < 70 ) {
       read_distance_front();
+
+      Serial.println("D: " + String(distance_front));
       delay(10);
     }
     

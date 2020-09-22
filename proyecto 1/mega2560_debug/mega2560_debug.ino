@@ -36,9 +36,10 @@ void loop() {
 
 #if DEBUG
   if (state_from_server == 1) {
-    Serial.println("Encendido");
+    //Serial.println("Encendido");
 #endif
     read_weight();
+    Serial.println("W: " + String(weight));
     if (weight > weight_umbral )
     {
       Serial.println("Objeto depositado, iniciando recorrido");
@@ -99,8 +100,8 @@ void loop() {
 #if DEBUG
   }
   else {
-    Serial.println("Esperando WiFi");
-    delay(1000);
+    delay(100);
+    Serial.println("Esperando...");
   }
 #endif
 }
