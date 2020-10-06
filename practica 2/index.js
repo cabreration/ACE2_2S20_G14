@@ -22,7 +22,7 @@ const dbConnect = (url) => {
         });
 };
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT || 80, () => {
     api.dbConnect(process.env.TESTING ? db.testUrl : db.url);
 });
 
