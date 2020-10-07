@@ -6,5 +6,5 @@ void setup_arduino () {
   pinMode(triggerUltraSonicFront, OUTPUT);
 
   pinMode(sensorLeft,INPUT);
-  pinMode(sensorRight, INPUT); 
+  pinMode(sensorRight, INPUT);
 }

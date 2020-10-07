@@ -1,5 +1,6 @@
 
 //pines analogicos para el sensor ultrasonico frontla
+
 #define echoUltraSonicFront A12
 #define triggerUltraSonicFront A13
 

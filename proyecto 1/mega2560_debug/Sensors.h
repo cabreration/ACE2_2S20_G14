@@ -4,10 +4,11 @@
 
 //variables para la lectura de peso:
 HX711 sWeight;
+
 float calibration = 20280.0; //factor de calibración para el sensor
 long zeroFactor = 0;
 int weight = 0;
-#define weight_umbral 150
+#define weight_umbral 400
 
 //variables para el medidor de distancia
 long duration = 0;
@@ -21,9 +22,12 @@ void read_weight() {
 void read_distance_front() {
   digitalWrite(triggerUltraSonicFront, LOW);
   delayMicroseconds(2);
+  
   digitalWrite(triggerUltraSonicFront, HIGH);
+  
   delayMicroseconds(10);
   digitalWrite(triggerUltraSonicFront, LOW);
+  
   duration = pulseIn(echoUltraSonicFront, HIGH);
   distance_front = (duration * 0.034 / 2 ) * 10;
 }

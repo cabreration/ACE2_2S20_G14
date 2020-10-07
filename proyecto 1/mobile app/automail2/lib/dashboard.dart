@@ -190,9 +190,34 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
+  bool yaLlegoX = false;
+  bool yaLlegoY = false;
+
   Card makeDashboardItemCanvas(double posX, double posY) {
     double _posX = 19 + (posX * 0.2667);
     double _posY = 20 + (posY * 0.994);
+
+    // ya llego al final
+    if (_posX == 150){
+      yaLlegoX = true;
+    }
+
+    if (yaLlegoX){
+      _posY = 20 + 150 * 0.994;
+    }
+
+    if (yaLlegoX && _posX == 19){
+      yaLlegoX = false;
+      yaLlegoY = true;
+    }
+
+    _posY = 20 + ((150 - posY) * 0.994);
+
+    if (yaLlegoY && _posY == 20){
+      yaLlegoX = false;
+      yaLlegoY = false;
+    }
+    
     return Card(
       elevation: 1.0,
       margin: new EdgeInsets.all(8.0),
