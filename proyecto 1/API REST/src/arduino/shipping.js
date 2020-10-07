@@ -131,12 +131,10 @@ module.exports = (app, aws_utils, firebase) => {
             payload = {
                 notification: {
                     title: "Inicio de Entrega",
-                    body: `El dispositivo se dispone a salir del buzon,
-                    con un peso de ${weight.toString()}`
+                    body: `El dispositivo se dispone a salir del buzon, con un peso de ${weight.toString()}`
                 },
                 data: {
-                    msj: `El peso del objeto es de ${weight.toString()},
-                        el dispositivo salio el ${(new Date()).toDateString()}`,
+                    msj: `El peso del objeto es de ${weight.toString()}, el dispositivo salio el ${(new Date()).toDateString()}`,
                     click_action: 'FLUTTER_NOTIFICATION_CLICK'
                 }
             };
@@ -145,13 +143,10 @@ module.exports = (app, aws_utils, firebase) => {
             payload = {
                 notification: {
                     title: "Entrega de paquete",
-                    body: `El dispositivo se encuentra completando la entrega,
-                    con un peso de ${weight.toString()} y un total de ${common.obstacles}`
+                    body: `El dispositivo se encuentra completando la entrega, con un peso de ${weight.toString()} y un total de ${common.obstacles}`
                 },
                 data: {
-                    msj: `El peso del objeto es de ${weight},
-                     el dispositivo salio el ${(new Date()).toDateString()}
-                     y se encontraron ${common.obstacles} obstaculos`,
+                    msj: `El peso del objeto es de ${weight}, el dispositivo salio el ${(new Date()).toDateString()} y se encontraron ${common.obstacles} obstaculos`,
                     click_action: 'FLUTTER_NOTIFICATION_CLICK'
                 }
             };
@@ -163,8 +158,7 @@ module.exports = (app, aws_utils, firebase) => {
                     body: `El dispositivo se dispone a regresar al buzon con un total de ${common.obstacles} obstaculos`,
                 },
                 data: {
-                    msj: `El dispositivo salio el ${(new Date()).toDateString()}
-                     y se encontraron ${common.obstacles} obstaculos`,
+                    msj: `El dispositivo salio el ${(new Date()).toDateString()} y se encontraron ${common.obstacles} obstaculos`,
                     click_action: 'FLUTTER_NOTIFICATION_CLICK'
                 }
             };
