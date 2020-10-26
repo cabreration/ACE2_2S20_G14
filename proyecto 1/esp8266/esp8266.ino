@@ -1,6 +1,5 @@
 // ACE2 2S 2020
 // Created by: Leonel Aguilar
-// Adapted by: DamC
 
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>

@@ -1,6 +1,5 @@
 //libreria X711 Arduino Library
 #include "Setup.h"
-#include <HX711.h>
 #include "LineFollower.h"
 
 //variables para la comunicacion I2C-ESP8266
@@ -30,7 +29,9 @@ void setup() {
 
 void loop() {
 
-  follow_line(0, 150);
+  
+  //read_distance_front();
+  //Serial.println(distance_front);
   return;
   /*
   //test();

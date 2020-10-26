@@ -1,6 +1,6 @@
 #include <Wire.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 
 //variables para la transmision de datos;
@@ -10,27 +10,7 @@ int delivery_array[2] = {0, 0};
 
 char  state_from_server = 0; // 0 inactivo //1 activo
 
-void sendEvent(int count) {
-  // se envian el travel_array
-  Wire.write(highByte(travel_array[0]));
-  Wire.write(lowByte(travel_array[0]));
-  
-  Wire.write(highByte(travel_array[1]));
-  Wire.write(lowByte(travel_array[1]));
-  
-  Wire.write(highByte(travel_array[2]));
-  Wire.write(lowByte(travel_array[2]));
-  
-  Wire.write(highByte(travel_array[3]));
-  Wire.write(lowByte(travel_array[3]));
-  
-  //se envia el delivery_array
-  Wire.write(highByte(delivery_array[0]));
-  Wire.write(lowByte(delivery_array[0]));
-  
-  Wire.write(highByte(delivery_array[1]));
-  Wire.write(lowByte(delivery_array[1]));
-}
+void sendEvent(int count) { return; }
 
 // funcion que pide el estatus del server y el ping
 // primeros 2 bytes = ping
