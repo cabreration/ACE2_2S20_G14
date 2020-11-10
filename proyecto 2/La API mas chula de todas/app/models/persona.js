@@ -4,6 +4,7 @@ module.exports = mongoose => {
       nombre: { type: String, required: true },
       dpi: { type: Number, required: true },
       temperatura: { type: Number, required: true },
+      tiempo: { type: Number, required: true },
       imagen: { type: String, required: true }
     },
     { timestamps: true }

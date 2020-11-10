@@ -17,8 +17,20 @@ var persona = {
     nombre: "Nombre Apellido",
     dpi: 1234567891234567,
     temperatura: 0,
-    imagen: ""
+    tiempo: 0,
+    imagen: "1234"
 }
+
+let personas = []
+
+// Guardar informacion del usuario
+exports.empezo = (req, res) => {
+    if(personas.length != 0){
+        return res.status(200).send("si");
+    }else{
+        return res.status(200).send("no");
+    }
+};
 
 // Guardar informacion del usuario
 exports.UserInfo = (req, res) => {
@@ -38,6 +50,8 @@ exports.UserInfo = (req, res) => {
         Body: decodedImage
     }
 
+    personas.push(persona);
+
     s3.putObject(parametros, (err, data) => {
         if(err){
             return res.status(400).json({
@@ -50,16 +64,33 @@ exports.UserInfo = (req, res) => {
     });
 };
 
+
 exports.UserTemperatura = (req, res) => {
-    if(persona.nombre == null){
+    if(personas.length == 0){
+        return res.status(400).json({ message: "No se encuentran datos."});
+    }
+    let temp = personas.pop();
+    if(temp.nombre == ""){
         return res.status(400).json({ message: "Antes de medir la temperatura "+
             "se deben tomar los datos de la persona." });
     }
-    if (!req.body.temperatura) {
-        return res.status(400).json({ message: "No se envio la temperatura" });
+    if (!req.query.temp || !req.query.tiem) {
+        return res.status(400).json({ message: "No se envio la temperatura o el tiempo" });
     }
 
-    persona.temperatura = req.body.temperatura
+    let tiempo;
+    let temperatura;
+
+    try {
+        tiempo = parseInt(req.query.tiem)/1000;
+        temperatura = parseInt(req.query.temp)/1000;
+    } catch (error) {
+        tiempo = 0;
+        temperatura = 0;
+    }
+    
+    temp.temperatura = temperatura;
+    temp.tiempo = tiempo;
 
     Persona.create(persona, (err, persona) => {
             if (err) {
