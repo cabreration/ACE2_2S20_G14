@@ -14,10 +14,10 @@ const myBucket = 'arturobucket';
 const Persona = db.persona;
 
 var persona = {
-    nombre: "",
-    dpi: 0,
+    nombre: "Nombre Apellido",
+    dpi: 1234567891234567,
     temperatura: 0,
-    imagen:""
+    imagen: ""
 }
 
 // Guardar informacion del usuario
@@ -52,7 +52,7 @@ exports.UserInfo = (req, res) => {
 
 exports.UserTemperatura = (req, res) => {
     if(persona.nombre == null){
-        return res.status(400).json({ message: "Antes de bedir la temperatura "+
+        return res.status(400).json({ message: "Antes de medir la temperatura "+
             "se deben tomar los datos de la persona." });
     }
     if (!req.body.temperatura) {
