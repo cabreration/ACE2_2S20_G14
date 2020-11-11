@@ -67,15 +67,15 @@ exports.UserInfo = (req, res) => {
 
 exports.UserTemperatura = (req, res) => {
     if(personas.length == 0){
-        return res.status(400).json({ message: "No se encuentran datos."});
+        return res.send("no hay personas");
     }
     let temp = personas.pop();
     if(temp.nombre == ""){
-        return res.status(400).json({ message: "Antes de medir la temperatura "+
-            "se deben tomar los datos de la persona." });
+        return res.send("no hay nombre");
     }
+
     if (!req.query.temp || !req.query.tiem) {
-        return res.status(400).json({ message: "No se envio la temperatura o el tiempo" });
+        return res.send(!req.query.temp ? "no hay temperatura" : "no hay tiempo");
     }
 
     let tiempo;
@@ -94,15 +94,13 @@ exports.UserTemperatura = (req, res) => {
 
     Persona.create(persona, (err, persona) => {
             if (err) {
-                return res.status(500).json({
-                    db_message: err.message || "",
-                    message: "Error al guardar al usuario"
-                });
+                console.log("****** ERROR EN LA BASE DE DATOS ******");
+                console.log(err);
+                console.log("***************************************");
+                
+                return res.send("error en la base de datos");
             }
-            return res.status(200).json({
-                producto: persona,
-                message: "Usuario agregado"
-            });
+            return res.send("agregado correctamente");
         });
 };
 

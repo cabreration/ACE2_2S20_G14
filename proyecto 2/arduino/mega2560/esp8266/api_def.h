@@ -11,7 +11,8 @@ const int routeCount = 1;
 String state_str = "inactivo";
 
 String routes[1] = {
-  "empezo"
+  "empezo2",
+  "val?temp="
 };
 
 void sendStatusRequest() {
@@ -28,13 +29,21 @@ void sendStatusRequest() {
   }
 }
 
+void sendTempAndTime(){
+  debug("Realizando petición [val]");
+  String respuesta = app_request(routes[1]);
+   
+  
+}
+
 // Definir como un par ordenad todas las funciones
 // que haran las rutas previamente definidas en el arreglo "routes"
 // cada vez que se haga match con un valor del arreglo se llamara a
 // la funcion contenida en este arreglo en el mismo indice
 // donde se encontro la ruta
 void (*functions[routeCount]) () = {
-  sendStatusRequest
+  sendStatusRequest,
+  sendTempAndTime
 };
 
 // Procesar una llamada hacia la API

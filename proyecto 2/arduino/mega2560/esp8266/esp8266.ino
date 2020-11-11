@@ -15,11 +15,12 @@ void debug(String val) {
 
 const char *ssid = "TIGO-5248";
 const char *password = "2D9657312043";
-const char *host = "http://18.218.183.200/";
+const char *host = "http://34.71.99.202/";
 
 int valuePing = 120;        //
 char state_from_server = 0; // 0 Desactivado - 1 Activado
 bool state = 0;             // Apagado
+String paramsRuta1 = "";
 
 //setup del modulo esp_826
 
@@ -97,16 +98,17 @@ void loop() {
   Serial.println(">> Tiempo: " + String(tim));
 
   switch (state) {
-    case 0:
+    case 1:
       Serial.println(">> Revisando si hay nuevos usuarios...");
       process_api_request(0);
       Serial.println(">> STATUS DEL SERVER: " + String(state_from_server));
       sendStatus();
-      
       break;
 
-    case 1:
+    case 3:
       Serial.println(">> Enviando temperatura y tiempo");
+      paramsRuta1 = String(temp) + "&tiem=" + String(tim);
+      process_api_request(1);
       break;
 
     default:
@@ -121,6 +123,6 @@ void loop() {
 // funcion que se ejecuta cuanod se solicitan bytes del master (arduino)
 void sendStatus() {
   Wire.beginTransmission(8);
-  Wire.write(0);
+  Wire.write(state_from_server);
   Wire.endTransmission();
 }

@@ -9,6 +9,16 @@ module.exports = app => {
     // Agrega un usuario con temperatura a la base de datos
     router.get("/val", persona.UserTemperatura);
 
+    router.get("/val2", (req, res) => {
+        let temp = req.params.temp / 1000;
+        let time = req.params.tiem / 1000;
+
+        console.log(`Temperatura: ${temp} °C`);
+        console.log(`Tiempo: ${tiem} segundos`)
+
+        res.send("agregado");
+    });
+
     // Agrega un usuario con temperatura a la base de datos
     router.get("/obtenerPersonas", persona.getAll);
 
