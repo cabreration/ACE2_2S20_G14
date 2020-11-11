@@ -1,19 +1,14 @@
-//libreria X711 Arduino Library
+n//libreria X711 Arduino Library
 #include "Setup.h"
 #include <HX711.h>
 #include "LineFollower.h"
-
 
 long actualMillis = 0;
 long begin_millis = 0;
 int ping = 0;
 
-
-
 //variables para la comunicacion I2C-ESP8266
 int actualPing = 0;
-
-
 
 void calibrate_lineFollower(){
   // se requiere que el sensor central este sobre la linea
