@@ -14,7 +14,7 @@ module.exports = app => {
         let time = req.params.tiem / 1000;
 
         console.log(`Temperatura: ${temp} °C`);
-        console.log(`Tiempo: ${tiem} segundos`)
+        console.log(`Tiempo: ${time} segundos`)
 
         res.send("agregado");
     });
