@@ -10,8 +10,8 @@ module.exports = app => {
     router.get("/val", persona.UserTemperatura);
 
     router.get("/val2", (req, res) => {
-        let temp = req.params.temp / 1000;
-        let time = req.params.tiem / 1000;
+        let temp = parseInt(req.params.temp) / 1000;
+        let time = parseInt(req.params.tiem) / 1000;
 
         console.log(`Temperatura: ${temp} °C`);
         console.log(`Tiempo: ${time} segundos`)
