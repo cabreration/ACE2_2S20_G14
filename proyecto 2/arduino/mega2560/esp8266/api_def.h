@@ -7,11 +7,11 @@
 // las funciones con cada ruta que se consumira de la API
 
 // Definir la cantidad de rutas y funciones a registrar
-const int routeCount = 1;
+const int routeCount = 2;
 String state_str = "inactivo";
 
-String routes[1] = {
-  "empezo2",
+String routes[2] = {
+  "empezo",
   "val?temp="
 };
 
@@ -31,9 +31,7 @@ void sendStatusRequest() {
 
 void sendTempAndTime(){
   debug("Realizando petición [val]");
-  String respuesta = app_request(routes[1]);
-   
-  
+  debug(app_request(routes[1]));
 }
 
 // Definir como un par ordenad todas las funciones

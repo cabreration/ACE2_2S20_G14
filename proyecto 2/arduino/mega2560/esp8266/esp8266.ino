@@ -90,8 +90,8 @@ void loop() {
 
   byte state = Wire.read();
 
-  int temp = Wire.read() << 8 + Wire.read();
-  int tim = Wire.read() << 8 + Wire.read();
+  unsigned int temp = Wire.read() << 8 + Wire.read();
+  unsigned int tim = Wire.read() << 8 + Wire.read();
 
   Serial.println(">> Estado: " + String(state));
   Serial.println(">> Temperatura: " + String(temp));
@@ -107,7 +107,7 @@ void loop() {
 
     case 3:
       Serial.println(">> Enviando temperatura y tiempo");
-      paramsRuta1 = String(temp) + "&tiem=" + String(tim);
+      paramsRuta1 = String(temp) + "0&tiem=" + String(tim);
       process_api_request(1);
       break;
 

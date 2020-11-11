@@ -7,9 +7,9 @@ module.exports = app => {
     router.post("/UserInfo", persona.UserInfo);
 
     // Agrega un usuario con temperatura a la base de datos
-    router.get("/val", persona.UserTemperatura);
+    // router.get("/val", persona.UserTemperatura); // <-- DESCOMENTAR
 
-    router.get("/val2", (req, res) => {
+    router.get("/val", (req, res) => {
         let temp = parseInt(req.query.temp) / 1000;
         let time = parseInt(req.query.tiem) / 1000;
 
@@ -23,10 +23,10 @@ module.exports = app => {
     router.get("/obtenerPersonas", persona.getAll);
 
     // Agrega un usuario con temperatura a la base de datos
-    router.get("/empezo", persona.empezo);
+    // router.get("/empezo", persona.empezo);  // <-- DESCOMENTAR
 
     //SOLO PARA PRUEBAS, RETORNAR SI 1/10 de las veces que se pida.
-    router.get("/empezo2", (req, res) =>{
+    router.get("/empezo", (req, res) =>{
         if (Math.floor(Math.random() * 10) % 10){
             return res.send("no");
         }
