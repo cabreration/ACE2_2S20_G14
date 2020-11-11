@@ -31,7 +31,7 @@ void sendStatusRequest() {
 
 void sendTempAndTime(){
   debug("Realizando petición [val]");
-  debug(app_request(routes[1]));
+  debug(app_request(routes[1] + paramsRuta1));
 }
 
 // Definir como un par ordenad todas las funciones

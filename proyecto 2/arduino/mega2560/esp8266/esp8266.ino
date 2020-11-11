@@ -10,6 +10,7 @@
 const int16_t I2CArduino = 0x8;
 
 void debug(String val) {
+  return;
   Serial.println(String(">> ") + val);
 }
 
@@ -84,7 +85,7 @@ void setup() {
 // The loop function runs over and over again forever
 void loop() {
 
-  Serial.println(">> Esperando arduino");
+  //Serial.println(">> Esperando arduino");
   Wire.requestFrom(8, 5);
   while (Wire.available() < 5) { }
 
@@ -93,26 +94,26 @@ void loop() {
   unsigned int temp = Wire.read() << 8 + Wire.read();
   unsigned int tim = Wire.read() << 8 + Wire.read();
 
-  Serial.println(">> Estado: " + String(state));
-  Serial.println(">> Temperatura: " + String(temp));
-  Serial.println(">> Tiempo: " + String(tim));
+  //Serial.println(">> Estado: " + String(state));
+  //Serial.println(">> Temperatura: " + String(temp));
+  //Serial.println(">> Tiempo: " + String(tim));
 
   switch (state) {
     case 1:
-      Serial.println(">> Revisando si hay nuevos usuarios...");
+      //Serial.println(">> Revisando si hay nuevos usuarios...");
       process_api_request(0);
-      Serial.println(">> STATUS DEL SERVER: " + String(state_from_server));
+      //Serial.println(">> STATUS DEL SERVER: " + String(state_from_server));
       sendStatus();
       break;
 
     case 3:
-      Serial.println(">> Enviando temperatura y tiempo");
+      //Serial.println(">> Enviando temperatura y tiempo");
       paramsRuta1 = String(temp) + "0&tiem=" + String(tim);
       process_api_request(1);
       break;
 
     default:
-      Serial.println(">> Ignorando estado...");
+      //Serial.println(">> Ignorando estado...");
       break;
   }
 
