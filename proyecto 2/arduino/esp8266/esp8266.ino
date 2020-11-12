@@ -91,13 +91,30 @@ void loop() {
 
   byte state = Wire.read();
 
-  unsigned int temp = Wire.read() << 8 + Wire.read();
-  unsigned int tim = Wire.read() << 8 + Wire.read();
+  byte ht = Wire.read(); // Bit alto temperatura
+  byte lt = Wire.read(); // Bit bajo temperatura
 
-  //Serial.println(">> Estado: " + String(state));
-  //Serial.println(">> Temperatura: " + String(temp));
-  //Serial.println(">> Tiempo: " + String(tim));
+  byte hc = Wire.read(); // Bit alto tiempo
+  byte lc = Wire.read(); // Bit bajo tiempo
+  
+  unsigned int temp = ht;
+  temp <<= 8;
+  temp += lt;
 
+  unsigned int tim = hc;
+  tim <<= 8;
+  tim += lc;
+  /*
+  Serial.println("Valores:");
+  Serial.println(hc);
+  Serial.println(lc);
+  Serial.println(hc);
+  Serial.println(lc);
+  
+  Serial.println(">> Estado: " + String(state));
+  Serial.println(">> Temperatura: " + String(temp));
+  Serial.println(">> Tiempo: " + String(tim));
+  */
   switch (state) {
     case 1:
       //Serial.println(">> Revisando si hay nuevos usuarios...");
@@ -108,7 +125,7 @@ void loop() {
 
     case 3:
       //Serial.println(">> Enviando temperatura y tiempo");
-      paramsRuta1 = String(temp) + "0&tiem=" + String(tim);
+      paramsRuta1 = String(temp) + "0&tiem=" + String(tim) + "00";
       process_api_request(1);
       break;
 

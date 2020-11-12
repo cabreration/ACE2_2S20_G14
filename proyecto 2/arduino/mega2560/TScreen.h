@@ -14,6 +14,23 @@
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
+int randColor = 0;
+
+int getRandomColor(){
+    randColor = random(10);
+
+    switch(randColor % 7){
+      case 0: return BLUE;
+      case 1: return RED;
+      case 2: return GREEN;
+      case 4: return CYAN;
+      case 5: return MAGENTA;
+      case 6: return YELLOW;  
+    }
+
+    return WHITE;
+}
+
 //Representar un punto en la pantalla
 struct Point {
   int X = 0;

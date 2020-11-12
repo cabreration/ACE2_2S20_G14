@@ -11,6 +11,7 @@ enum TftScene {
   DESINFECTING_DOOR
 };
 
+
 //escena actual, en la que se encuentra el sistema
 TftScene currentScene = START;
 
@@ -70,19 +71,16 @@ void printFirstScene(void)
 {
   tft.fillScreen(BLACK);
 
-  tft.setCursor(60, 75);
-  tft.setTextSize(7);
-  tft.setTextColor(GREEN);
-  tft.println("ED3");
-
   tft.setTextSize(2);
   tft.setTextColor(WHITE);
   tft.setCursor(5, 10);
   tft.println(F("Ingresa con tu telefono..."));
 
-  int curr_radius = 0;
-  int max_radius = 50;
+  int curr_radius = 10;
+  int max_radius = 40;
   int inc = 1;
+  int color = getRandomColor();
+
   while (!enabled) {
     if (Serial.available()) {
       String value = Serial.readString();
@@ -95,15 +93,21 @@ void printFirstScene(void)
     //esperar a la api
     if (curr_radius > max_radius) {
       inc = -1;
-    } else if (curr_radius <= 1) {
+    } else if (curr_radius <= 10) {
       inc = 1;
+      color = getRandomColor();
+
+      tft.setCursor(60, 85);
+      tft.setTextSize(7);
+      tft.setTextColor(color);
+      tft.println("ED3");
     }
 
     if (inc == 1) {
-      tft.drawCircle(120, 220, curr_radius, GREEN);
+      tft.drawCircle(120, 225, curr_radius, color);
     }
     else {
-      tft.drawCircle(120, 220, curr_radius, BLACK);
+      tft.drawCircle(120, 225, curr_radius, BLACK);
     }
 
     curr_radius += inc;
@@ -154,14 +158,14 @@ void printEnterObjects() {
   tft.fillRect(110, 155, 10, 35, RED);
   tft.fillTriangle(100, 165, 130, 165, 115, 150, RED);
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 5; i++) {
     tft.fillRect(0, 200, 240, 120, BLACK);
     // cajitas // objetos
-    if (i == 3) {
+    if (i == 2) {
       tft.fillRect(75, 125, 20, 20, GREEN);
-    } else if (i == 4) {
+    } else if (i == 3) {
       tft.fillRect(105, 125, 20, 20, GREEN);
-    } else if (i == 5) {
+    } else if (i == 4) {
       tft.fillRect(135, 125, 20, 20, GREEN);
     }
     //texto
@@ -173,7 +177,7 @@ void printEnterObjects() {
     tft.setTextSize(3);
     tft.setTextColor(WHITE);
     tft.print("TUS OBJETOS");
-    delay(1000);
+    delay(1500);
   }
 
 
@@ -187,7 +191,7 @@ void printEnterObjects() {
   tft.fillRect(105, 125, 20, 20, GREEN);
   tft.fillRect(135, 125, 20, 20, GREEN);
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 3; i++) {
     //flecha
     tft.fillRect(110, 105, 10, 10, CYAN);
     tft.fillTriangle(100, 115, 130, 115, 115, 120, CYAN);
@@ -293,22 +297,30 @@ void printTempScene(void) {
   tft.setTextSize(3);
   tft.print("Leyendo tu   temperatura");
 
-  float total = temperature.get();
   tft.fillCircle(60, 250, 25, WHITE);
   tft.fillCircle(61, 250, 20, RED);
-  buzzer.beep(100);
+  float total = temperature.get();
+  buzzer.beep(50);
 
-  total += temperature.get();
   tft.fillCircle(120, 250, 25, WHITE);
   tft.fillCircle(121, 250, 20, YELLOW);
-  buzzer.beep(100);
-
   total += temperature.get();
+  buzzer.beep(50);
+
   tft.fillCircle(180, 250, 25, WHITE);
   tft.fillCircle(181, 250, 20, GREEN);
-  buzzer.beep(100);
+  total += temperature.get();
+  buzzer.beep(50);
 
   total /= 3;
+
+  if (total > 35.5 && total < 36.1) {
+    total += 0.5;
+  } else if (total > 37.2) {
+    total -= 0.3;
+  }
+
+  temperaturaTotal = floor(total * 100);
 
   tft.fillScreen(BLACK);
 
@@ -365,7 +377,8 @@ void printTempScene(void) {
     tft.print("DENEGADA");
 
     changeCurrentScene(START);
-    delay(5000);
+    finalizarProceso();
+    delay(1500);
   }
 
   else {
@@ -411,7 +424,7 @@ void printSanitizeHandsScene() {
   tft.setTextSize(3);
   tft.setTextColor(BLUE);
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 5; i++) {
     delay(500);
     tft.fillRect(0, 220, 240, 100, CYAN);
     delay(500);
@@ -436,16 +449,33 @@ void printRemoveObjectsScene(void) {
   //apertura
   tft.fillRect(40, 100, 160, 50, BLACK);
 
-  // cajitas // objetos
   tft.fillRect(75, 125, 20, 20, CYAN);
   tft.fillRect(105, 125, 20, 20, CYAN);
   tft.fillRect(135, 125, 20, 20, CYAN);
 
-  //flecha
-  tft.fillRect(110, 135, 10, 35, RED);
-  tft.fillTriangle(100, 170, 130, 170, 115, 185, RED);
+  for (int i = 0; i < 5; i++) {
 
-  for (int i = 0; i < 10; i++) {
+    //apertura
+    tft.fillRect(40, 100, 160, 50, BLACK);
+
+    // cajitas // objetos
+    if ( i == 1 ) {
+      tft.fillRect(75, 125, 20, 20, CYAN);
+      tft.fillRect(105, 125, 20, 20, CYAN);
+      tft.fillRect(135, 125, 20, 20, CYAN);
+    }
+    else if ( i == 2 ) {
+      tft.fillRect(75, 125, 20, 20, CYAN);
+      tft.fillRect(105, 125, 20, 20, CYAN);
+    }
+    else if ( i == 3 ) {
+      tft.fillRect(75, 125, 20, 20, CYAN);
+    }
+
+    //flecha
+    tft.fillRect(110, 135, 10, 35, RED);
+    tft.fillTriangle(100, 170, 130, 170, 115, 185, RED);
+
     tft.fillRect(0, 200, 240, 120, BLACK);
     //texto
     tft.setCursor(20, 200);
@@ -456,7 +486,7 @@ void printRemoveObjectsScene(void) {
     tft.setTextSize(3);
     tft.setTextColor(WHITE);
     tft.print("TUS OBJETOS");
-    delay(1000);
+    delay(1500);
   }
 
   changeCurrentScene(ENTER_DOOR);
@@ -483,7 +513,7 @@ void printPassDoorScene(void) {
   tft.print("PASE ADELANTE...");
 
   // FLECHA
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 5; i++) {
     tft.fillRect(85, 115, 40, 10, RED);
     tft.fillTriangle(125, 110, 125, 130, 145, 120, RED);
 
@@ -497,12 +527,14 @@ void printPassDoorScene(void) {
     tft.setTextColor(GREEN);
     tft.print("PERMITIDO");
 
-    delay(1000);
+    delay(1200);
 
-    tft.fillRect(85, 110, 60, 20, WHITE);
-    tft.fillRect(15, 210, 225, 80, BLACK);
+    if (i < 4) {
+      tft.fillRect(85, 110, 60, 20, WHITE);
+      tft.fillRect(15, 210, 225, 80, BLACK);
 
-    delay(500);
+      delay(300);
+    }
   }
 
   changeCurrentScene(DESINFECTING_DOOR);
@@ -518,7 +550,7 @@ void printDesinfectingDoor(void) {
   tft.print("PROCESO FINALIZADO...");
 
   // FLECHA
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 5; i++) {
     tft.fillRect(85, 115, 40, 10, BLUE);
     tft.fillTriangle(125, 110, 125, 130, 145, 120, BLUE);
 
@@ -534,11 +566,14 @@ void printDesinfectingDoor(void) {
 
     delay(500);
 
-    tft.fillRect(85, 110, 60, 20, WHITE);
-    tft.fillRect(5, 210, 235, 80, BLACK);
-
-    delay(500);
+    if (i < 4) {
+      tft.fillRect(85, 110, 60, 20, WHITE);
+      tft.fillRect(5, 210, 235, 80, BLACK);
+      delay(500);
+    }
   }
 
+  finalizarProceso();
+  delay(1000);
   changeCurrentScene(START);
 }
