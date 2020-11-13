@@ -45,7 +45,16 @@ exports.UserInfo = (req, res) => {
     persona.nombre = req.body.nombre;
     persona.imagen = "    https://arq2p2.s3.us-east-2.amazonaws.com/fotos/"+imagen
 
-    var decodedImage = new Buffer(req.body.base64.replace('data:image/jpeg;base64,',''), 'base64');
+    var decodedImage;
+    try{
+        decodedImage = new Buffer(req.body.base64.replace('data:image/jpeg;base64,',''), 'base64');
+    }
+    catch{        
+        return res.status(400).json({
+            message: "No se agrego la imagen."
+        });
+    }
+
     let parametros = {
         Bucket: "arq2p2",
         Key: "fotos/" + imagen,
