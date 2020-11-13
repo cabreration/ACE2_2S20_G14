@@ -1,0 +1,20 @@
+<div class="mainDiv bg-dark text-light">
+    <div class="container">
+        <form>
+            <div class="form-group">
+                <label>Nombre</label>
+                <input [(ngModel)]="name" type="text" class="form-control" id="idName" placeholder="Introduzca su nombre" name="nameInput"> 
+            </div>
+            <div class="form-group">
+              <label >No. dpi</label>
+              <input [(ngModel)]="dpi" type="text" class="form-control" id="idDPI" placeholder="Introduzca su no. de dpi" name="dpiInput">
+              <small class="form-text text-muted">Nunca compartiremos su informacion</small>
+            </div>
+            <!--<div class="form-group">
+                <label>Fotografia</label>
+                <input type="file" capture="camera" accept="image/*" id="cameraInput" name="cameraInput">
+            </div>-->
+            <button (click)="sendRecord()" type="button" class="btn btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
