@@ -25,45 +25,41 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card mb-4 shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
                             <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <p class="card-text" style="font-size: 5em;">{{avgTime}} minutos</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">9 mins</small>
+                                    <p><strong>Tiempo Promedio de Sanitizacion</strong></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="card mb-4 shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                            <canvas baseChart width="100%" style="max-height: 400px;"
+                                [datasets]="firstChartData"
+                                [labels]="firstChartLabels"
+                                [options]="firstChartOptions"
+                                [colors]="ChartColors"
+                                [legend]="firstChartLegend"
+                                [chartType]="firstChartType">
+                            </canvas>
                             <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">9 mins</small>
-                                </div>
+                                <p class="card-text"><strong>Promedio de Personas Entrantes Por Hora del Dia</strong></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="card mb-4 shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                            <canvas baseChart width="100%" style="max-height: 400px;"
+                                [datasets]="secondChartData"
+                                [labels]="secondChartLabels"
+                                [options]="secondChartOptions"
+                                [colors]="ChartColors"
+                                [legend]="secondChartLegend"
+                                [chartType]="secondChartType">
+                            </canvas>
                             <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">9 mins</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card mb-4 shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                            <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">9 mins</small>
-                                </div>
+                                <p class="card-text"><strong>Promedio de Visitantes por Dia de la Semana</strong></p>
                             </div>
                         </div>
                     </div>
