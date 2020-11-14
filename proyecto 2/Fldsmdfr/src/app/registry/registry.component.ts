@@ -34,7 +34,7 @@ export class RegistryComponent implements OnInit {
     let user = {
       nombre: this.name,
       dpi: Number(this.dpi),
-      base64: 'lnfanfasdlkjnasdlkfnaskljdfnaskljfdnsalkjdfnsa'
+      base64: this.photo
     }
 
     let observer = this.api.PostRequest('/UserInfo', user).subscribe(res => {
