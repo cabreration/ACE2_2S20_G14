@@ -16,7 +16,7 @@ void debug(String val) {
 
 const char *ssid = "TIGO-5248";
 const char *password = "2D9657312043";
-const char *host = "http://34.71.99.202/";
+const char *host = "http://18.218.183.200/";
 
 int valuePing = 120;        //
 char state_from_server = 0; // 0 Desactivado - 1 Activado

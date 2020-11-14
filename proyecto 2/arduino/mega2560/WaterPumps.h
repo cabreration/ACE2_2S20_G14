@@ -4,9 +4,9 @@
 #define P_SH 19 //Bomba de agua para sanitizar manos
 #define P_DO 18 //Bomba de agua para sanitizar la puerta
 
-#define P_SO_DEL 1000 //Delay para la bomba de sanitizar objetos
+#define P_SO_DEL 750 //Delay para la bomba de sanitizar objetos
 #define P_SH_DEL 1000 //Delay para la bomba de sanitizar manos
-#define P_DO_DEL 1000 //Delay para la bomba de sanitizar la puerta
+#define P_DO_DEL 3000 //Delay para la bomba de sanitizar la puerta
 
 class WaterPumps {
 
