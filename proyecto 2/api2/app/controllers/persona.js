@@ -48,8 +48,7 @@ exports.UserInfo = (req, res) => {
     var decodedImage;
     try{
         decodedImage = new Buffer(req.body.base64.replace('data:image/jpeg;base64,',''), 'base64');
-    }
-    catch{        
+    }catch{        
         return res.status(400).json({
             message: "No se agrego la imagen."
         });
