@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
     let observer2 = this.api.GetRequest('/getConcurrenciaHoras').subscribe(res => console.log(res))
 
     let observer3 = this.api.GetRequest('/getPromedioHoras').subscribe(res => console.log(res))
+
+    let observer4 = this.api.GetRequest('/getConcurrenciaDias').subscribe(res => console.log(res))
   }
 
 }
