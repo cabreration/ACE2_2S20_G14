@@ -8,6 +8,7 @@ const httpOptions = {
   })
 };
 
+const mockAddress = 'http://localhost:3000';
 const httpAddress = 'http://18.218.183.200'; /* 'http://localhost:3000/' */
 
 @Injectable({

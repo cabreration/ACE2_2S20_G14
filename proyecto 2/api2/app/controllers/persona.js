@@ -2,8 +2,6 @@ const db = require("../models");
 const AWS = require('aws-sdk');
 var crypto = require('crypto');
 
-var md5sum = crypto.createHash('md5');
-
 const s3 = new AWS.S3({
     accessKeyId: "AKIAVBMZRCURELPTYIXJ",
     secretAccessKey: "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"
@@ -53,7 +51,7 @@ exports.UserInfo = (req, res) => {
             message: "No se agrego la imagen."
         });
     }
-
+    console.log("se agrego la imagen");
     let parametros = {
         Bucket: "arq2p2",
         Key: "fotos/" + imagen,

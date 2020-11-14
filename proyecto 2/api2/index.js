@@ -9,7 +9,7 @@ app.use(cors());
 
 // Recibir datos de tipo JSON
 //app.use(bodyParser.json());
-app.use(bodyParser.json({limit: '10mb', extendido: true}));
+app.use(bodyParser.json({limit: '100mb', extendido: true}));
 
 require("./app/routes/persona")(app);
 
