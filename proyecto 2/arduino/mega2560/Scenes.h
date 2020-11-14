@@ -318,7 +318,7 @@ void printTempScene(void) {
   if (total > 35.5 && total < 36.1) {
     total += 0.5;
   } else if (total > 37.2) {
-    total -= 0.3;
+    total -= 1;
   }
 
   temperaturaTotal = floor(total * 100);
