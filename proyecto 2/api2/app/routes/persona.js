@@ -17,9 +17,12 @@ module.exports = app => {
 
     // Devuelve el tiempo promedio
     router.get("/getTiempoPromedio", persona.getTiempoPromedio);
-
+    
+    // Devuelve el tiempo promedio
+    router.get("/getTemperaturaPromedio", persona.getTemperaturaPromedio);
+    
     // Devuelve concurrenca por hora
-    router.get("/getConcurrenciaHoras", persona.getConcurrenciaHoras);
+    router.get("/getConcurrenciaDias", persona.getConcurrenciaDias);
 
     // Devuelve promedio por hora
     router.get("/getPromedioHoras", persona.getPromedioHoras);

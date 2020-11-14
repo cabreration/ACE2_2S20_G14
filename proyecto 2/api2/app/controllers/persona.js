@@ -153,27 +153,54 @@ exports.getTiempoPromedio = (_req, res) => {
         });
 };
 
+// Obtiene el tiempo promedio
+exports.getTemperaturaPromedio = (_req, res) => {
+    Persona.find({})
+        .then(data => {
+            let total = 0;
+            data.forEach(element => {
+                total += element.temperatura
+            });
+            total = total / data.length
+
+            return res.json({temperatura: total});
+        })
+        .catch(err => {
+            return res.status(500).json({
+                message: "Error al retornar a las personas en la BD",
+                db_message: err.message || ""
+            });
+        });
+};
+
 // Horas de concurrencia
-exports.getConcurrenciaHoras = (_req, res) => {
+exports.getConcurrenciaDias = (_req, res) => {
+    let dias = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
     Persona.find({})
         .then(data => {
             let horas = new Map();
 
-            for(let i=0;i<24;i++){
-                horas.set(i+'',0)
+            for(let i=0;i<7;i++){
+                horas.set(dias[i],0)
             }
             data.forEach(element => {
-                let hora = element.hora.split(':')[0];
-                let cantidad = horas.get(hora)+1;
-                horas.set(hora, cantidad);
+                let fecha = new Date(element.fecha)
+                let dia = fecha.getUTCDay()
+                    
+                for(let i=0;i<7;i++){
+                    if(dia == i){
+                        horas.set(dias[i], horas.get(dias[i])+1);
+                        break;
+                    }
+                }
             });
             let array = [];
             
-            for(let i=0;i<24;i++){
-                array.push({hora:i+'', personas: horas.get(i+'')})
+            for(let i=0;i<7;i++){
+                array.push({dia:dias[i], personas: (horas.get(dias[i])/data.length)*100})
             }
 
-            return res.json({horas: array});
+            return res.json({dias: array});
         })
         .catch(err => {
             return res.status(500).json({
