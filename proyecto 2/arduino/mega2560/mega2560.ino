@@ -22,6 +22,7 @@ void finalizarProceso() {
 
 #include "Temperature.h"
 #include "Buzzer.h"
+#include "WaterPumps.h"
 #include "TScreen.h"
 #include "SecuritySystem.h"
 #include "Scenes.h"
@@ -49,24 +50,11 @@ void setup() {
   tft.setTextColor(0xFFFF, 0x0000);
   tft.setRotation(Orientation);
 
-  pinMode(17, OUTPUT);
-  pinMode(18, OUTPUT);
-  pinMode(19, OUTPUT);
 }
 
 //Arduino LOOP @16MHz
 void loop() {
 
-  for (int i = 17; i <= 19; i++) {
-    Serial.println("Prendiendo: " + String(i));
-    digitalWrite(i, LOW);
-    delay(1000);
-    digitalWrite(i, HIGH);
-    delay(1000);
-  }
-
-  delay(1000);
-  return;
   if (hasChanged) {
     //repaint based in current scene
     switch (getCurrentScene()) {

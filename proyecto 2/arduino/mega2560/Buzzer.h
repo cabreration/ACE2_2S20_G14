@@ -27,21 +27,6 @@ class Buzzer {
         beep(75);
         delay(100);
       }
-      /*
-      delay(250);
-      for (int i = 0; i < 4; i++) {
-        beep(100);
-        delay(250);
-      }
-      for (int i = 0; i < 4; i++) {
-        beep(25);
-        delay(750);
-      }
-      for (int i = 0; i < 2; i++) {
-        beep(150);
-        delay(100);
-      }
-      */
     }
 };
 

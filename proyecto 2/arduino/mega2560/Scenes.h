@@ -205,8 +205,9 @@ void printEnterObjects() {
     tft.setTextSize(3);
     tft.setTextColor(WHITE);
     tft.print("TUS OBJETOS");
-    delay(500);
 
+    wp.sanitizeObjects();
+        
     tft.fillRect(100, 105, 30, 15, BLACK);
     tft.fillRect(5, 200, 235, 120, BLACK);
     delay(500);
@@ -424,6 +425,8 @@ void printSanitizeHandsScene() {
   tft.setTextSize(3);
   tft.setTextColor(BLUE);
 
+  wp.sanitizeHands();
+  
   for (int i = 0; i < 5; i++) {
     delay(500);
     tft.fillRect(0, 220, 240, 100, CYAN);
@@ -548,6 +551,8 @@ void printDesinfectingDoor(void) {
   printDoor();
 
   tft.print("PROCESO FINALIZADO...");
+
+  wp.sanitizeDoor();
 
   // FLECHA
   for (int i = 0; i < 5; i++) {
